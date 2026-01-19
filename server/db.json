@@ -98,7 +98,7 @@
       "T3_done": false,
       "isHoliday": false,
       "files": [],
-      "updatedAt": "2026-01-14T15:00:50.058Z"
+      "updatedAt": "2026-01-19T03:34:09.653Z"
     },
     {
       "id": 6,
@@ -126,9 +126,54 @@
           "relativePath": "uploads/2026-01-02/LangSmith_Tool_Report_WeijiaYe_20251224.pdf",
           "uploadDate": "2026-01-14T15:01:27.326Z",
           "mimetype": "application/pdf"
+        },
+        {
+          "name": "Agentic-KGR Co-evolutionary Knowledge Graph Construction through Multi-Agent Reinforcement Learning.pdf",
+          "filename": "Agentic-KGR Co-evolutionary Knowledge Graph Construction through Multi-Agent Reinforcement Learning.pdf",
+          "size": 15750588,
+          "path": "/Users/weijia/Library/Mobile Documents/com~apple~CloudDocs/code/ai/claude_demo/schedule-app/server/uploads/2026-01-02/Agentic-KGR Co-evolutionary Knowledge Graph Construction through Multi-Agent Reinforcement Learning.pdf",
+          "relativePath": "uploads/2026-01-02/Agentic-KGR Co-evolutionary Knowledge Graph Construction through Multi-Agent Reinforcement Learning.pdf",
+          "uploadDate": "2026-01-19T05:08:56.832Z",
+          "mimetype": "application/pdf"
+        },
+        {
+          "name": "20251212_GongLi_AgenticKGR_Notes.md",
+          "filename": "20251212_GongLi_AgenticKGR_Notes.md",
+          "size": 3388,
+          "path": "/Users/weijia/Library/Mobile Documents/com~apple~CloudDocs/code/ai/claude_demo/schedule-app/server/uploads/2026-01-02/20251212_GongLi_AgenticKGR_Notes.md",
+          "relativePath": "uploads/2026-01-02/20251212_GongLi_AgenticKGR_Notes.md",
+          "uploadDate": "2026-01-19T05:09:02.277Z",
+          "mimetype": "application/octet-stream"
+        },
+        {
+          "name": "20251205_GongLi_MinerU2.5_Notes.md",
+          "filename": "20251205_GongLi_MinerU2.5_Notes.md",
+          "size": 8322,
+          "path": "/Users/weijia/Library/Mobile Documents/com~apple~CloudDocs/code/ai/claude_demo/schedule-app/server/uploads/2026-01-02/20251205_GongLi_MinerU2.5_Notes.md",
+          "relativePath": "uploads/2026-01-02/20251205_GongLi_MinerU2.5_Notes.md",
+          "uploadDate": "2026-01-19T05:09:10.379Z",
+          "mimetype": "application/octet-stream"
+        },
+        {
+          "name": "20251219_LiJiasheng_PromptEngineeringCN_Notes.md",
+          "filename": "20251219_LiJiasheng_PromptEngineeringCN_Notes.md",
+          "size": 76650,
+          "path": "/Users/weijia/Library/Mobile Documents/com~apple~CloudDocs/code/ai/claude_demo/schedule-app/server/uploads/2026-01-02/20251219_LiJiasheng_PromptEngineeringCN_Notes.md",
+          "relativePath": "uploads/2026-01-02/20251219_LiJiasheng_PromptEngineeringCN_Notes.md",
+          "uploadDate": "2026-01-19T05:09:17.918Z",
+          "mimetype": "application/octet-stream"
+        },
+        {
+          "name": "Prompt Engineering.pdf",
+          "filename": "Prompt Engineering.pdf",
+          "size": 6816989,
+          "path": "/Users/weijia/Library/Mobile Documents/com~apple~CloudDocs/code/ai/claude_demo/schedule-app/server/uploads/2026-01-02/Prompt Engineering.pdf",
+          "relativePath": "uploads/2026-01-02/Prompt Engineering.pdf",
+          "uploadDate": "2026-01-19T05:09:21.942Z",
+          "mimetype": "application/pdf"
         }
       ],
-      "updatedAt": "2026-01-14T15:01:27.338Z"
+      "updatedAt": "2026-01-19T05:09:21.951Z"
     },
     {
       "id": 7,
@@ -162,12 +207,13 @@
       "remark": "",
       "location": "603",
       "time": "9:30-11:30",
-      "T1_done": false,
-      "T2_1_done": false,
-      "T2_2_done": false,
-      "T3_done": false,
+      "T1_done": true,
+      "T2_1_done": true,
+      "T2_2_done": true,
+      "T3_done": true,
       "isHoliday": false,
-      "files": []
+      "files": [],
+      "updatedAt": "2026-01-19T03:29:24.766Z"
     },
     {
       "id": 9,

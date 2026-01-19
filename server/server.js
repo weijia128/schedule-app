@@ -250,6 +250,43 @@ server.get('/schedule/:id/files', (req, res) => {
   }
 });
 
+// ==================== 获取所有文件列表 ====================
+// GET /files/all - 获取所有上传的文件
+server.get('/files/all', (req, res) => {
+  try {
+    const db = router.db;
+    const schedules = db.get('schedule').value();
+
+    // 收集所有文件信息
+    const allFiles = [];
+    schedules.forEach(schedule => {
+      if (schedule.files && schedule.files.length > 0) {
+        schedule.files.forEach((file, index) => {
+          allFiles.push({
+            ...file,
+            scheduleId: schedule.id,
+            scheduleWeek: schedule.week,
+            scheduleDate: schedule.date,
+            fileIndex: index,
+            downloadUrl: `/schedule/${schedule.id}/files/${index}`
+          });
+        });
+      }
+    });
+
+    // 按上传时间倒序排列
+    allFiles.sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate));
+
+    res.json({
+      files: allFiles,
+      total: allFiles.length
+    });
+  } catch (error) {
+    console.error('Get all files error:', error);
+    res.status(500).json({ error: 'Failed to get all files', message: error.message });
+  }
+});
+
 // ==================== 留言板路由 ====================
 // GET /messageBoard - 获取留言板数据
 server.get('/messageBoard', (req, res) => {

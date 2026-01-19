@@ -891,7 +891,368 @@
         .stat-card.p-解勇宝 { --card-accent: var(--person-4); }
         .stat-card.p-叶玮佳 { --card-accent: var(--person-5); }
 
-        /* 5. TABLE CONTAINER */
+        /* 6. DOCUMENT LIBRARY */
+        .document-library {
+            margin-bottom: var(--space-xl);
+            padding: var(--space-xl);
+            background: var(--bg-elevated);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            position: relative;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.35s both;
+        }
+
+        .document-library::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.08), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .library-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+            gap: var(--space-lg);
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+        }
+
+        .library-header h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin: 0;
+        }
+
+        .library-icon {
+            font-size: 1.8rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .library-controls {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .file-search-input {
+            padding: var(--space-sm) var(--space-md);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 200px;
+        }
+
+        .file-search-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+            background: var(--bg-elevated);
+        }
+
+        .file-search-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .file-sort-select {
+            padding: var(--space-sm) var(--space-md);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .file-sort-select:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .file-sort-select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .library-stats {
+            padding: var(--space-md) var(--space-lg);
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
+            position: relative;
+            z-index: 1;
+        }
+
+        .total-files {
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+
+        .total-files strong {
+            color: var(--accent-primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .document-library-content {
+            position: relative;
+            z-index: 1;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: var(--space-sm);
+        }
+
+        /* 自定义滚动条样式 */
+        .document-library-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .document-library-content::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+        }
+
+        .document-library-content::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: var(--radius-sm);
+            transition: background 0.3s ease;
+        }
+
+        .document-library-content::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-secondary);
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: var(--space-2xl);
+            color: var(--text-tertiary);
+            font-size: 1rem;
+        }
+
+        .document-list {
+            display: grid;
+            gap: var(--space-md);
+        }
+
+        .document-item {
+            display: grid;
+            grid-template-columns: 40px 1fr auto auto;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-lg);
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+
+        .document-item:hover {
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-md);
+            transform: translateX(4px);
+        }
+
+        .document-icon {
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .document-info {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .document-name {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+
+        .document-meta {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+        }
+
+        .document-meta span {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .document-meta-item {
+            font-family: var(--font-mono);
+            padding: 2px 8px;
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 4px;
+            color: var(--accent-primary);
+        }
+
+        .document-size {
+            font-family: var(--font-mono);
+            color: var(--text-tertiary);
+        }
+
+        .document-actions {
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-sm) var(--space-lg);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: var(--text-inverse);
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+            text-decoration: none;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+        }
+
+        .download-btn:active {
+            transform: translateY(0);
+        }
+
+        .refresh-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-sm) var(--space-lg);
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            color: var(--text-inverse);
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(6, 182, 212, 0.3);
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
+        }
+
+        .refresh-btn:active {
+            transform: translateY(0);
+        }
+
+        .refresh-btn.refreshing {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .refresh-btn.refreshing::after {
+            content: '';
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--text-inverse);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-2xl);
+            color: var(--text-tertiary);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-md);
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 1.1rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .empty-state-subtext {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+        }
+
+        @media (max-width: 768px) {
+            .library-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .library-controls {
+                width: 100%;
+            }
+
+            .file-search-input {
+                flex: 1;
+            }
+
+            .document-item {
+                grid-template-columns: 40px 1fr;
+                gap: var(--space-sm);
+            }
+
+            .document-actions {
+                grid-column: 2;
+                justify-content: flex-start;
+            }
+        }
+
+        /* 7. TABLE CONTAINER */
         .table-container {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -1913,6 +2274,34 @@
         <h2>已完成分享统计</h2>
         <div id="statsCards" class="stats-cards">
             <!-- 统计卡片将由JS动态生成 -->
+        </div>
+    </div>
+
+    <!-- 文档库区域 -->
+    <div class="document-library">
+        <div class="library-header">
+            <h2>
+                <span class="library-icon">📚</span>
+                分享文档库
+            </h2>
+            <div class="library-controls">
+                <input type="text" id="fileSearchInput" class="file-search-input" placeholder="搜索文件名...">
+                <select id="fileSortSelect" class="file-sort-select">
+                    <option value="date-desc">上传时间 (最新)</option>
+                    <option value="date-asc">上传时间 (最早)</option>
+                    <option value="name-asc">文件名 (A-Z)</option>
+                    <option value="name-desc">文件名 (Z-A)</option>
+                </select>
+                <button id="refreshLibraryBtn" class="refresh-btn" title="刷新文档库">
+                    🔄 刷新
+                </button>
+            </div>
+        </div>
+        <div class="library-stats">
+            <span class="total-files">共 <strong id="totalFilesCount">0</strong> 个文件</span>
+        </div>
+        <div id="documentLibraryContent" class="document-library-content">
+            <div class="loading-spinner">加载中...</div>
         </div>
     </div>
 
@@ -3301,6 +3690,354 @@
         }
     }
 
+    // ==================== 文档库功能 ====================
+    let allFilesData = [];
+    let filteredFilesData = [];
+
+    // 加载文档库数据
+    async function loadDocumentLibrary() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/files/all`);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            allFilesData = data.files || [];
+            filteredFilesData = [...allFilesData];
+            renderDocumentLibrary();
+        } catch (error) {
+            console.error('文档库数据加载失败:', error);
+            renderEmptyLibrary();
+        }
+    }
+
+    // 渲染文档库
+    function renderDocumentLibrary() {
+        const contentDiv = document.getElementById('documentLibraryContent');
+        const totalCountSpan = document.getElementById('totalFilesCount');
+
+        totalCountSpan.textContent = filteredFilesData.length;
+
+        if (filteredFilesData.length === 0) {
+            renderEmptyLibrary();
+            return;
+        }
+
+        const fileList = document.createElement('div');
+        fileList.className = 'document-list';
+
+        filteredFilesData.forEach((file, index) => {
+            const fileItem = createFileItem(file, index);
+            fileList.appendChild(fileItem);
+        });
+
+        contentDiv.innerHTML = '';
+        contentDiv.appendChild(fileList);
+    }
+
+    // 创建文件项元素
+    function createFileItem(file, index) {
+        const item = document.createElement('div');
+        item.className = 'document-item';
+        item.style.animationDelay = `${index * 0.05}s`;
+
+        // 文件图标（根据文件类型）
+        const icon = getFileIcon(file.name || file.filename);
+
+        // 格式化文件大小
+        const sizeFormatted = file.size ? formatFileSize(file.size) : '未知大小';
+
+        // 格式化上传时间
+        const uploadDate = file.uploadDate ? new Date(file.uploadDate).toLocaleString('zh-CN') : '未知时间';
+
+        // 创建预览按钮（替代原来的下载按钮）
+        const previewBtn = document.createElement('button');
+        previewBtn.className = 'download-btn';
+        previewBtn.innerHTML = '👁️ 预览';
+        previewBtn.title = '打开预览';
+        previewBtn.onclick = () => openLibraryFilePreview(file);
+
+        item.innerHTML = `
+            <div class="document-icon">${icon}</div>
+            <div class="document-info">
+                <div class="document-name">${file.name || file.filename}</div>
+                <div class="document-meta">
+                    <span class="document-meta-item">📅 ${file.scheduleDate || '未知日期'}</span>
+                    <span class="document-meta-item">📊 第${file.scheduleWeek || '?'}周</span>
+                    <span class="document-size">🕒 ${uploadDate}</span>
+                    <span class="document-size">📦 ${sizeFormatted}</span>
+                </div>
+            </div>
+            <div class="document-actions"></div>
+        `;
+        item.querySelector('.document-actions').appendChild(previewBtn);
+
+        // 添加下载链接（隐藏，用于预览页面的下载功能）
+        const downloadLink = document.createElement('a');
+        downloadLink.href = `${API_BASE_URL}${file.downloadUrl}`;
+        downloadLink.download = file.name || file.filename;
+        downloadLink.style.display = 'none';
+        downloadLink.className = 'hidden-download-link';
+        item.appendChild(downloadLink);
+
+        return item;
+    }
+
+    // 从文档库打开文件预览
+    async function openLibraryFilePreview(file) {
+        currentPreviewFile = { index: file.scheduleId - 1, fileIndex: file.fileIndex, file };
+
+        const previewSection = document.getElementById('filePreviewSection');
+        const previewContent = document.getElementById('filePreviewContentInline');
+        const previewTitle = document.getElementById('previewFileNameInline');
+        const previewInfo = document.getElementById('previewFileInfoInline');
+
+        // 设置文件名和信息
+        const fileName = file.name || file.filename || `文件`;
+        const fileSize = file.size ? formatFileSize(file.size) : '';
+        const uploadDate = file.uploadDate ? new Date(file.uploadDate).toLocaleString('zh-CN') : '';
+
+        previewTitle.textContent = fileName;
+        previewInfo.textContent = `大小: ${fileSize}${uploadDate ? ' | 上传时间: ' + uploadDate : ''}${file.scheduleDate ? ' | 所属日期: ' + file.scheduleDate : ''}`;
+
+        // 显示加载状态
+        previewContent.innerHTML = '<div class="preview-loading">正在加载预览...</div>';
+
+        // 显示全屏预览区域
+        previewSection.style.display = 'flex';
+        previewSection.style.position = 'fixed';
+        previewSection.style.top = '0';
+        previewSection.style.left = '0';
+        previewSection.style.width = '100vw';
+        previewSection.style.height = '100vh';
+        previewSection.style.maxHeight = '100vh';
+        previewSection.style.zIndex = '10000';
+        document.body.style.overflow = 'hidden';
+
+        // 加载文件预览
+        try {
+            await loadLibraryFilePreview(file);
+        } catch (error) {
+            previewContent.innerHTML = `<div class="preview-error">预览加载失败: ${error.message}</div>`;
+        }
+    }
+
+    // 加载文档库文件预览内容
+    async function loadLibraryFilePreview(file) {
+        const fileName = file.name || file.filename || '';
+        const extension = fileName.split('.').pop().toLowerCase();
+
+        const previewContent = document.getElementById('filePreviewContentInline');
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/schedule/${file.scheduleId}/files/${file.fileIndex}`);
+
+            if (!response.ok) {
+                throw new Error(`获取文件失败: ${response.status}`);
+            }
+
+            // 根据文件类型显示预览
+            if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].includes(extension)) {
+                // 图片文件
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                previewContent.innerHTML = `
+                    <div class="image-preview-inline">
+                        <img src="${url}" alt="${fileName}" style="max-width: 100%; height: auto;">
+                    </div>
+                `;
+            } else if (extension === 'pdf') {
+                // PDF文件
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                previewContent.innerHTML = `
+                    <div class="pdf-preview-inline">
+                        <iframe src="${url}" frameborder="0"></iframe>
+                    </div>
+                `;
+            } else if (['txt', 'md', 'json', 'js', 'html', 'css', 'csv'].includes(extension)) {
+                // 文本文件
+                const text = await response.text();
+                previewContent.innerHTML = `
+                    <div class="text-preview-inline">
+                        <pre>${escapeHtml(text)}</pre>
+                    </div>
+                `;
+            } else {
+                // 其他文件类型，显示文件信息
+                previewContent.innerHTML = `
+                    <div class="no-preview">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📄</div>
+                        <p>此文件类型不支持在线预览</p>
+                        <p style="font-size: 0.9rem; color: var(--text-tertiary); margin-top: 0.5rem;">
+                            文件类型: ${extension.toUpperCase()}
+                        </p>
+                        <button class="file-preview-download-btn" onclick="downloadCurrentLibraryFile()" style="margin-top: 1rem;">
+                            📥 下载文件
+                        </button>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            previewContent.innerHTML = `<div class="preview-error">预览失败: ${error.message}</div>`;
+        }
+    }
+
+    // 下载当前预览的文档库文件
+    async function downloadCurrentLibraryFile() {
+        if (currentPreviewFile && currentPreviewFile.file) {
+            const file = currentPreviewFile.file;
+            const downloadUrl = `${API_BASE_URL}/schedule/${file.scheduleId}/files/${file.fileIndex}`;
+
+            // 创建临时下载链接
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = file.name || file.filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+
+    // 修改全局下载函数，支持文档库文件
+    async function downloadCurrentFile() {
+        if (currentPreviewFile) {
+            // 检查是否是文档库文件（有 scheduleId 和 fileIndex 属性）
+            if (currentPreviewFile.file && currentPreviewFile.file.scheduleId !== undefined) {
+                await downloadCurrentLibraryFile();
+            } else {
+                // 原有的排班表文件下载逻辑
+                await handleFileDownload(currentPreviewFile.index, currentPreviewFile.fileIndex);
+            }
+        }
+    }
+
+    // 根据文件类型返回图标
+    function getFileIcon(filename) {
+        if (!filename) return '📄';
+
+        const ext = filename.toLowerCase().split('.').pop();
+        const iconMap = {
+            'pdf': '📕',
+            'doc': '📘',
+            'docx': '📘',
+            'ppt': '📙',
+            'pptx': '📙',
+            'xls': '📗',
+            'xlsx': '📗',
+            'txt': '📝',
+            'md': '📃',
+            'jpg': '🖼️',
+            'jpeg': '🖼️',
+            'png': '🖼️',
+            'gif': '🖼️',
+            'zip': '📦',
+            'rar': '📦',
+            'mp4': '🎬',
+            'mp3': '🎵',
+        };
+
+        return iconMap[ext] || '📄';
+    }
+
+    // 渲染空状态
+    function renderEmptyLibrary() {
+        const contentDiv = document.getElementById('documentLibraryContent');
+        contentDiv.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <div class="empty-state-text">暂无文件</div>
+                <div class="empty-state-subtext">还没有团队分享任何文档</div>
+            </div>
+        `;
+    }
+
+    // 添加文档库事件监听
+    function addDocumentLibraryListeners() {
+        const searchInput = document.getElementById('fileSearchInput');
+        const sortSelect = document.getElementById('fileSortSelect');
+        const refreshBtn = document.getElementById('refreshLibraryBtn');
+
+        // 搜索功能
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            filterAndSortFiles(searchTerm, sortSelect.value);
+        });
+
+        // 排序功能
+        sortSelect.addEventListener('change', (e) => {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            filterAndSortFiles(searchTerm, e.target.value);
+        });
+
+        // 刷新功能
+        refreshBtn.addEventListener('click', async () => {
+            await refreshDocumentLibrary();
+        });
+    }
+
+    // 刷新文档库
+    async function refreshDocumentLibrary() {
+        const refreshBtn = document.getElementById('refreshLibraryBtn');
+        const originalText = refreshBtn.innerHTML;
+
+        try {
+            // 添加刷新状态
+            refreshBtn.classList.add('refreshing');
+            refreshBtn.innerHTML = '🔄 刷新中...';
+
+            // 重新加载数据
+            await loadDocumentLibrary();
+
+            // 刷新成功提示
+            console.log('✅ 文档库已刷新');
+
+            // 1秒后恢复按钮
+            setTimeout(() => {
+                refreshBtn.classList.remove('refreshing');
+                refreshBtn.innerHTML = originalText;
+            }, 1000);
+        } catch (error) {
+            console.error('❌ 文档库刷新失败:', error);
+            refreshBtn.classList.remove('refreshing');
+            refreshBtn.innerHTML = '❌ 刷新失败';
+
+            // 2秒后恢复按钮
+            setTimeout(() => {
+                refreshBtn.innerHTML = originalText;
+            }, 2000);
+        }
+    }
+
+    // 过滤和排序文件
+    function filterAndSortFiles(searchTerm, sortOption) {
+        // 过滤
+        filteredFilesData = allFilesData.filter(file => {
+            const fileName = (file.name || file.filename || '').toLowerCase();
+            return fileName.includes(searchTerm);
+        });
+
+        // 排序
+        filteredFilesData.sort((a, b) => {
+            switch (sortOption) {
+                case 'date-desc':
+                    return new Date(b.uploadDate) - new Date(a.uploadDate);
+                case 'date-asc':
+                    return new Date(a.uploadDate) - new Date(b.uploadDate);
+                case 'name-asc':
+                    return (a.name || a.filename || '').localeCompare(b.name || b.filename || '', 'zh-CN');
+                case 'name-desc':
+                    return (b.name || b.filename || '').localeCompare(a.name || a.filename || '', 'zh-CN');
+                default:
+                    return 0;
+            }
+        });
+
+        renderDocumentLibrary();
+    }
+
     // 更新留言板数据到API
     async function updateMessageBoard() {
         try {
@@ -3333,6 +4070,10 @@
         // 加载留言板数据
         await loadMessageBoard();
         addMessageBoardListeners();
+
+        // 加载文档库
+        await loadDocumentLibrary();
+        addDocumentLibraryListeners();
 
         if (success) {
             // API加载成功，自动勾选过期日期
