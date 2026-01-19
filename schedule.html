@@ -1449,6 +1449,7 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
+        .file-preview,
         .file-download {
             flex: 1;
             color: var(--accent-primary);
@@ -1462,6 +1463,7 @@
             transition: all 0.3s ease;
         }
 
+        .file-preview:hover,
         .file-download:hover {
             color: var(--accent-secondary);
             text-decoration: underline;
@@ -1681,6 +1683,164 @@
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+
+        /* === 内联文件预览样式 === */
+        .file-preview-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .file-preview-header-inline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-lg) var(--space-xl);
+            border-bottom: 2px solid var(--border-subtle);
+            background: var(--bg-secondary);
+            flex-shrink: 0;
+        }
+
+        .file-preview-title-inline {
+            flex: 1;
+            min-width: 0;
+            margin-right: var(--space-md);
+        }
+
+        .file-preview-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .file-preview-download-btn-inline {
+            padding: var(--space-sm) var(--space-lg);
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-preview-download-btn-inline:hover {
+            background: var(--accent-secondary);
+            transform: translateY(-1px);
+        }
+
+        .file-preview-title-inline h3 {
+            margin: 0 0 var(--space-xs) 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .file-preview-info-inline {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            font-family: var(--font-mono);
+        }
+
+        .file-preview-close-inline {
+            background: transparent;
+            border: none;
+            color: var(--text-tertiary);
+            font-size: 1.5rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .file-preview-close-inline:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            transform: rotate(90deg);
+        }
+
+        .file-preview-content-inline {
+            flex: 1;
+            overflow: auto;
+            padding: var(--space-lg) var(--space-xl);
+            background: var(--bg-primary);
+        }
+
+        .image-preview-inline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .image-preview-inline img {
+            max-width: 100%;
+            max-height: 80vh;
+            height: auto;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            object-fit: contain;
+        }
+
+        .pdf-preview-inline {
+            width: 100%;
+            height: calc(100vh - 120px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pdf-preview-inline iframe {
+            width: 100%;
+            height: 100%;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+        }
+
+        .text-preview-inline {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+        }
+
+        .text-preview-inline pre {
+            margin: 0;
+            padding: var(--space-lg);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
     </style>
 </head>
@@ -2100,7 +2260,7 @@
                 const fileSize = file.size ? formatFileSize(file.size) : '';
                 html += `
                     <div class="file-item">
-                        <a href="#" class="file-download" data-index="${index}" data-file-index="${fileIndex}" title="${fileName}">
+                        <a href="#" class="file-preview" data-index="${index}" data-file-index="${fileIndex}" title="${fileName}">
                             📎 ${truncateFileName(fileName, 20)}
                         </a>
                         <span class="file-size">${fileSize}</span>
@@ -2197,13 +2357,17 @@
             });
         });
 
-        // 文件下载事件
-        document.querySelectorAll('.file-download').forEach(link => {
+        // 文件预览事件
+        document.querySelectorAll('.file-preview').forEach(link => {
             link.addEventListener('click', async (e) => {
                 e.preventDefault();
                 const index = parseInt(e.target.getAttribute('data-index'));
                 const fileIndex = parseInt(e.target.getAttribute('data-file-index'));
-                await handleFileDownload(index, fileIndex);
+                try {
+                    await openFilePreview(index, fileIndex);
+                } catch (error) {
+                    console.error('预览错误:', error);
+                }
             });
         });
 
@@ -3187,7 +3351,159 @@
         }
     });
 
+    // === 文件预览模态框 ===
+    let currentPreviewFile = null;
+
+    // 打开文件预览
+    async function openFilePreview(index, fileIndex) {
+        const item = scheduleData[index];
+        const file = item.files[fileIndex];
+        currentPreviewFile = { index, fileIndex, file };
+
+        const previewSection = document.getElementById('filePreviewSection');
+        const previewContent = document.getElementById('filePreviewContentInline');
+        const previewTitle = document.getElementById('previewFileNameInline');
+        const previewInfo = document.getElementById('previewFileInfoInline');
+
+        // 设置文件名和信息
+        const fileName = file.name || file.filename || `文件${fileIndex + 1}`;
+        const fileSize = file.size ? formatFileSize(file.size) : '';
+        const uploadDate = file.uploadDate ? new Date(file.uploadDate).toLocaleString() : '';
+
+        previewTitle.textContent = fileName;
+        previewInfo.textContent = `大小: ${fileSize}${uploadDate ? ' | 上传时间: ' + uploadDate : ''}`;
+
+        // 显示加载状态
+        previewContent.innerHTML = '<div class="preview-loading">正在加载预览...</div>';
+
+        // 显示全屏预览区域
+        previewSection.style.display = 'flex';
+        previewSection.style.position = 'fixed';
+        previewSection.style.top = '0';
+        previewSection.style.left = '0';
+        previewSection.style.width = '100vw';
+        previewSection.style.height = '100vh';
+        previewSection.style.maxHeight = '100vh';
+        previewSection.style.zIndex = '10000';
+        document.body.style.overflow = 'hidden';
+
+        // 加载文件预览
+        try {
+            await loadFilePreview(index, fileIndex);
+        } catch (error) {
+            previewContent.innerHTML = `<div class="preview-error">预览加载失败: ${error.message}</div>`;
+        }
+    }
+
+    // 加载文件预览内容
+    async function loadFilePreview(index, fileIndex) {
+        const item = scheduleData[index];
+        const file = item.files[fileIndex];
+        const fileName = file.name || file.filename || '';
+        const extension = fileName.split('.').pop().toLowerCase();
+
+        const previewContent = document.getElementById('filePreviewContentInline');
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/schedule/${item.id || index}/files/${fileIndex}`);
+
+            if (!response.ok) {
+                throw new Error(`获取文件失败: ${response.status}`);
+            }
+
+            // 根据文件类型显示预览
+            if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].includes(extension)) {
+                // 图片文件
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                previewContent.innerHTML = `
+                    <div class="image-preview-inline">
+                        <img src="${url}" alt="${fileName}" style="max-width: 100%; height: auto;">
+                    </div>
+                `;
+            } else if (extension === 'pdf') {
+                // PDF文件
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                previewContent.innerHTML = `
+                    <div class="pdf-preview-inline">
+                        <iframe src="${url}" frameborder="0"></iframe>
+                    </div>
+                `;
+            } else if (['txt', 'md', 'json', 'js', 'html', 'css', 'csv'].includes(extension)) {
+                // 文本文件
+                const text = await response.text();
+                previewContent.innerHTML = `
+                    <div class="text-preview-inline">
+                        <pre>${escapeHtml(text)}</pre>
+                    </div>
+                `;
+            } else {
+                // 其他文件类型，显示文件信息
+                previewContent.innerHTML = `
+                    <div class="no-preview">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">📄</div>
+                        <p>此文件类型不支持在线预览</p>
+                        <p style="font-size: 0.9rem; color: var(--text-tertiary); margin-top: 0.5rem;">
+                            文件类型: ${extension.toUpperCase()}
+                        </p>
+                        <button class="file-preview-download-btn" onclick="downloadCurrentFile()" style="margin-top: 1rem;">
+                            📥 下载文件
+                        </button>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            previewContent.innerHTML = `<div class="preview-error">预览失败: ${error.message}</div>`;
+        }
+    }
+
+    // 关闭文件预览
+    function closeFilePreview() {
+        const previewSection = document.getElementById('filePreviewSection');
+        previewSection.style.display = 'none';
+        document.body.style.overflow = 'auto';
+        currentPreviewFile = null;
+    }
+
+    // 关闭内联文件预览（别名）
+    function closeInlineFilePreview() {
+        closeFilePreview();
+    }
+
+    // 下载当前预览的文件
+    async function downloadCurrentFile() {
+        if (currentPreviewFile) {
+            await handleFileDownload(currentPreviewFile.index, currentPreviewFile.fileIndex);
+        }
+    }
+
+    // HTML转义函数
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
 </script>
+
+    <!-- 文件预览区域 -->
+    <div id="filePreviewSection" class="file-preview-section" style="display: none;">
+        <div class="file-preview-header-inline">
+            <div class="file-preview-title-inline">
+                <h3 id="previewFileNameInline">文件名</h3>
+                <span id="previewFileInfoInline" class="file-preview-info-inline"></span>
+            </div>
+            <div class="file-preview-actions">
+                <button class="file-preview-download-btn-inline" onclick="downloadCurrentFile()">
+                    📥 下载
+                </button>
+                <button class="file-preview-close-inline" onclick="closeInlineFilePreview()">×</button>
+            </div>
+        </div>
+        <div class="file-preview-content-inline" id="filePreviewContentInline">
+            <!-- 预览内容将在这里动态加载 -->
+        </div>
+    </div>
 
 </body>
 </html>
