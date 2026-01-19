@@ -1,0 +1,3193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大模型技术团队研发知识分享排班表 (2025-2026)</title>
+
+    <!-- Distinctive Typography: Playfair Display + Outfit + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ═══════════════════════════════════════════════════════════════
+           DESIGN SYSTEM: Modern Editorial Bright
+           Aesthetic: Vibrant editorial style with warm, energetic tones
+           Typography: Playfair Display (display) + Outfit (body) + JetBrains Mono (data)
+           ═══════════════════════════════════════════════════════════════ */
+
+        :root {
+            /* Core Colors - Warm & Bright Palette */
+            --bg-primary: #fef9f3;
+            --bg-secondary: #fffbf5;
+            --bg-tertiary: #fff5eb;
+            --bg-elevated: #ffffff;
+
+            /* Accent - Vibrant Coral & Orange */
+            --accent-primary: #ff6b35;
+            --accent-secondary: #f7931e;
+            --accent-glow: rgba(255, 107, 53, 0.25);
+            --accent-subtle: rgba(255, 107, 53, 0.08);
+
+            /* Text Hierarchy */
+            --text-primary: #1a1a1a;
+            --text-secondary: #525252;
+            --text-tertiary: #737373;
+            --text-inverse: #ffffff;
+
+            /* Status Colors - Vibrant & Clear */
+            --status-done: #10b981;
+            --status-done-bg: rgba(16, 185, 129, 0.12);
+            --status-current: #ff6b35;
+            --status-current-bg: rgba(255, 107, 53, 0.12);
+            --status-holiday: #8b5cf6;
+            --status-holiday-bg: rgba(139, 92, 246, 0.1);
+
+            /* Person Colors - Vibrant & Distinct */
+            --person-1: #ef4444;  /* 班新博 - Bright Red */
+            --person-2: #f59e0b;  /* 龚丽 - Amber */
+            --person-3: #06b6d4;  /* 李佳晟 - Cyan */
+            --person-4: #ec4899;  /* 解勇宝 - Pink */
+            --person-5: #3b82f6;  /* 叶玮佳 - Blue */
+
+            /* Borders & Lines */
+            --border-subtle: rgba(0, 0, 0, 0.08);
+            --border-medium: rgba(0, 0, 0, 0.15);
+            --border-accent: var(--accent-primary);
+
+            /* Typography */
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body: 'Outfit', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+            /* Spacing Scale */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+
+            /* Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+
+            /* Shadows */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+            --shadow-glow: 0 0 40px var(--accent-glow);
+        }
+
+        /* 1. BASE STYLES & LAYOUT */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+
+            /* Vibrant gradient background */
+            background: linear-gradient(135deg, #fef9f3 0%, #fff5eb 50%, #fffbf5 100%);
+            background-attachment: fixed;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.15), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -40%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(247, 147, 30, 0.12), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        .container {
+            max-width: 1700px;
+            margin: 0 auto;
+            padding: var(--space-lg);
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 2. HEADER / TITLE */
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+            padding: var(--space-2xl) 0;
+            position: relative;
+            animation: slideDown 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), var(--accent-secondary), transparent);
+            border-radius: 2px;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.03em;
+            margin-bottom: var(--space-md);
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(255, 107, 53, 0.1);
+        }
+
+        h1 .accent {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-style: italic;
+        }
+
+        .page-subtitle {
+            font-family: var(--font-mono);
+            font-size: clamp(0.8rem, 2vw, 1rem);
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 500;
+        }
+
+        /* 3. INFO CARD */
+        .info-card {
+            background: var(--bg-elevated);
+            border: 2px solid var(--border-subtle);
+            border-left: 5px solid var(--accent-primary);
+            padding: var(--space-lg) var(--space-xl);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-xl);
+            font-size: 1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+        }
+
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent-primary);
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), transparent);
+        }
+
+        .info-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.03));
+            pointer-events: none;
+        }
+
+        .info-card strong {
+            color: var(--accent-primary);
+            font-weight: 700;
+        }
+
+        /* 4. MESSAGE BOARD SECTION */
+        .message-board {
+            margin-bottom: var(--space-xl);
+            background: var(--bg-elevated);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.25s both;
+        }
+
+        .message-board-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .message-section,
+        .notice-section {
+            padding: var(--space-xl);
+            position: relative;
+        }
+
+        .message-section {
+            border-right: 2px solid var(--border-subtle);
+        }
+
+        .message-section h3,
+        .notice-section h3 {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .message-section h3::before {
+            content: '📋';
+            font-size: 1.6rem;
+        }
+
+        .notice-section h3::before {
+            content: '📢';
+            font-size: 1.6rem;
+        }
+
+        /* 反馈表格样式 */
+        .feedback-table-container {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feedback-table-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .feedback-table-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .feedback-table-wrapper::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+        }
+
+        .feedback-table-wrapper::-webkit-scrollbar-thumb {
+            background: var(--border-medium);
+            border-radius: 3px;
+        }
+
+        .feedback-table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-primary);
+        }
+
+        .feedback-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .feedback-table th,
+        .feedback-table td {
+            padding: var(--space-sm) var(--space-md);
+            text-align: left;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .feedback-table th {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+        }
+
+        .feedback-table tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        .feedback-table tbody tr:hover {
+            background: var(--bg-elevated);
+        }
+
+        .feedback-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .feedback-table td {
+            vertical-align: middle;
+        }
+
+        /* 序号、日期和完成状态列不换行 */
+        .feedback-table td:nth-child(1),
+        .feedback-table td:nth-child(2),
+        .feedback-table td:nth-child(5) {
+            white-space: nowrap;
+        }
+
+        /* 可编辑单元格 */
+        .feedback-table .editable-cell {
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            min-height: 32px;
+        }
+
+        .feedback-table .editable-cell:hover {
+            background: var(--accent-subtle);
+        }
+
+        .feedback-table .editable-cell input,
+        .feedback-table .editable-cell select {
+            width: 100%;
+            padding: 6px 8px;
+            border: 2px solid var(--accent-primary);
+            border-radius: 4px;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .feedback-table .editable-cell input:focus,
+        .feedback-table .editable-cell select:focus {
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        /* 问题种类标签 */
+        .category-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .category-tag.服务优化 { background: #dbeafe; color: #1d4ed8; }
+        .category-tag.功能建议 { background: #dcfce7; color: #15803d; }
+        .category-tag.Bug反馈 { background: #fee2e2; color: #dc2626; }
+        .category-tag.使用问题 { background: #fef3c7; color: #d97706; }
+        .category-tag.其他 { background: #f3e8ff; color: #7c3aed; }
+
+        /* 完成状态 */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .status-badge.pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-badge.completed {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .status-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 删除按钮 */
+        .delete-feedback-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+        }
+
+        .delete-feedback-btn:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* 添加按钮 */
+        .add-feedback-btn {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            background: var(--bg-elevated);
+            border: 2px dashed var(--border-medium);
+            border-top: none;
+            color: var(--text-secondary);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 0 0 var(--radius-md) var(--radius-md);
+            flex-shrink: 0;
+        }
+
+        .add-feedback-btn:hover {
+            background: var(--accent-subtle);
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        /* 空状态 */
+        .feedback-empty {
+            text-align: center;
+            padding: var(--space-xl);
+            color: var(--text-tertiary);
+            font-style: italic;
+        }
+
+        /* 反馈统计样式 */
+        .feedback-stats {
+            display: flex;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .feedback-stat-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-stat-item.total {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.08));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #3b82f6;
+        }
+
+        .feedback-stat-item.completed {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.08));
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+        }
+
+        .feedback-stat-item.pending {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.08));
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #f59e0b;
+        }
+
+        .feedback-stat-item .stat-label {
+            font-family: var(--font-body);
+            font-weight: 500;
+        }
+
+        .feedback-stat-item .stat-value {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1rem;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        /* 序号列样式 */
+        .feedback-table td.seq-num {
+            text-align: center;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            color: var(--text-tertiary);
+        }
+
+        .message-content,
+        .notice-content {
+            height: 400px;
+            padding: var(--space-lg);
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            line-height: 1.8;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .message-content::-webkit-scrollbar,
+        .notice-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .message-content::-webkit-scrollbar-track,
+        .notice-content::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+        }
+
+        .message-content::-webkit-scrollbar-thumb,
+        .notice-content::-webkit-scrollbar-thumb {
+            background: var(--border-medium);
+            border-radius: 3px;
+        }
+
+        .message-content::-webkit-scrollbar-thumb:hover,
+        .notice-content::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-primary);
+        }
+
+        .message-content:hover,
+        .notice-content:hover {
+            background: var(--bg-elevated);
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .message-content::after,
+        .notice-content::after {
+            content: '✎ 点击编辑';
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--accent-primary);
+            opacity: 0;
+            transition: all 0.3s ease;
+            background: var(--bg-elevated);
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+        }
+
+        .message-content:hover::after,
+        .notice-content:hover::after {
+            opacity: 1;
+        }
+
+        .message-content.editing,
+        .notice-content.editing {
+            background: var(--bg-elevated);
+            border-color: var(--accent-primary);
+            box-shadow: inset 0 0 0 3px var(--accent-glow);
+        }
+
+        .message-content textarea,
+        .notice-content textarea {
+            width: 100%;
+            height: 300px;
+            padding: var(--space-md);
+            border: none;
+            outline: none;
+            resize: none;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            background: transparent;
+            color: var(--text-primary);
+        }
+
+        .message-content.empty,
+        .notice-content.empty {
+            color: var(--text-tertiary);
+            font-style: italic;
+        }
+
+        @media screen and (max-width: 768px) {
+            .message-board-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .message-section {
+                border-right: none;
+                border-bottom: 2px solid var(--border-subtle);
+            }
+
+            .message-section,
+            .notice-section {
+                padding: var(--space-lg);
+            }
+        }
+
+        /* 5. STATS SECTION */
+        .stats-container {
+            margin-bottom: var(--space-xl);
+            padding: var(--space-xl);
+            background: var(--bg-elevated);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            position: relative;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+        }
+
+        .stats-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.08), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .stats-container h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            position: relative;
+            z-index: 1;
+        }
+
+        .stats-container h2::before {
+            content: '';
+            display: inline-block;
+            width: 5px;
+            height: 28px;
+            background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 3px;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-card {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            animation: fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+        .stat-card:nth-child(5) { animation-delay: 0.5s; }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--card-accent, var(--accent-primary)), transparent);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent-glow), transparent 70%);
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--card-accent, var(--accent-primary));
+            background: var(--bg-elevated);
+        }
+
+        .stat-card:hover::before {
+            height: 100%;
+            opacity: 0.1;
+        }
+
+        .stat-card:hover::after {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .stat-card .name {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--card-accent, var(--text-primary));
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-sm);
+            border-bottom: 2px solid var(--border-subtle);
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-card .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-card .stat-row .label {
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .stat-card .stat-row .value {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            color: var(--text-primary);
+            background: var(--bg-elevated);
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            min-width: 32px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover .stat-row .value {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card .total-row {
+            margin-top: var(--space-md);
+            padding-top: var(--space-md);
+            border-top: 2px dashed var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-card .total-row .label {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .stat-card .total-row .value {
+            font-family: var(--font-mono);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--card-accent, var(--accent-primary)), var(--accent-secondary));
+            color: var(--text-inverse);
+            padding: 6px 18px;
+            border-radius: var(--radius-sm);
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover .total-row .value {
+            transform: scale(1.15);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Person-specific card colors */
+        .stat-card.p-班新博 { --card-accent: var(--person-1); }
+        .stat-card.p-龚丽 { --card-accent: var(--person-2); }
+        .stat-card.p-李佳晟 { --card-accent: var(--person-3); }
+        .stat-card.p-解勇宝 { --card-accent: var(--person-4); }
+        .stat-card.p-叶玮佳 { --card-accent: var(--person-5); }
+
+        /* 5. TABLE CONTAINER */
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            background: var(--bg-elevated);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both;
+        }
+
+        .schedule-table {
+            width: 100%;
+            min-width: 800px;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .schedule-table th,
+        .schedule-table td {
+            padding: var(--space-md) var(--space-lg);
+            text-align: left;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .schedule-table th {
+            background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        .schedule-table th::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), transparent);
+            opacity: 0.5;
+        }
+
+        .schedule-table tbody tr {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .schedule-table tbody tr:hover:not(.status-holiday) {
+            background: var(--accent-subtle);
+            transform: scale(1.005);
+        }
+
+        /* 序号和日期列不换行 */
+        .schedule-table td:nth-child(1),
+        .schedule-table td:nth-child(2) {
+            white-space: nowrap;
+        }
+
+        .schedule-table td:nth-child(1) {
+            min-width: 50px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .schedule-table td:nth-child(2) {
+            min-width: 110px;
+        }
+
+        /* 地点/时间列 */
+        .schedule-table td:nth-child(3) {
+            min-width: 100px;
+        }
+
+        /* 主题列 - 更宽 */
+        .schedule-table td:nth-child(4) {
+            min-width: 280px;
+            max-width: 400px;
+        }
+
+        /* 文件列 */
+        .schedule-table td:nth-child(5) {
+            min-width: 180px;
+        }
+
+        /* 备注列 */
+        .schedule-table td:nth-child(6) {
+            min-width: 180px;
+            max-width: 280px;
+        }
+
+        /* 完成情况列 */
+        .schedule-table td:nth-child(7) {
+            min-width: 160px;
+        }
+
+        /* 6. STATUS STYLES */
+        .status-done {
+            background: var(--status-done-bg) !important;
+            border-left: 4px solid var(--status-done) !important;
+        }
+
+        .status-done:hover {
+            background: rgba(16, 185, 129, 0.18) !important;
+        }
+
+        .status-holiday {
+            background: var(--status-holiday-bg) !important;
+            border-left: 4px solid var(--status-holiday) !important;
+            opacity: 0.75;
+        }
+
+        .status-holiday td:first-child::before {
+            content: '休';
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            margin-right: var(--space-sm);
+            background: linear-gradient(135deg, var(--status-holiday), #a78bfa);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+
+        .status-current {
+            background: var(--status-current-bg) !important;
+            border-left: 4px solid var(--status-current) !important;
+            position: relative;
+        }
+
+        .status-current::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary));
+            animation: currentPulse 2s ease-in-out infinite;
+            box-shadow: 0 0 15px var(--accent-primary);
+        }
+
+        @keyframes currentPulse {
+            0%, 100% { opacity: 1; transform: scaleY(1); }
+            50% { opacity: 0.7; transform: scaleY(0.95); }
+        }
+
+        /* 7. RESPONSIBLE CELL - Person Colors */
+        .responsible-cell {
+            font-family: var(--font-body);
+            font-weight: 700;
+            text-align: center;
+            min-width: 75px;
+            white-space: nowrap;
+            font-size: 1rem;
+        }
+
+        .p-班新博 {
+            color: var(--person-1);
+            text-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
+        }
+        .p-龚丽 {
+            color: var(--person-2);
+            text-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+        }
+        .p-李佳晟 {
+            color: var(--person-3);
+            text-shadow: 0 2px 8px rgba(6, 182, 212, 0.2);
+        }
+        .p-解勇宝 {
+            color: var(--person-4);
+            text-shadow: 0 2px 8px rgba(236, 72, 153, 0.2);
+        }
+        .p-叶玮佳 {
+            color: var(--person-5);
+            text-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+        }
+
+        /* 8. EDITABLE CELLS */
+        .editable {
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 200px;
+            border-radius: var(--radius-sm);
+            padding: var(--space-sm) var(--space-md);
+        }
+
+        /* 主题列更宽 */
+        .editable.topic-link {
+            min-width: 280px;
+        }
+
+        /* 备注列 */
+        .editable.remark-field {
+            min-width: 180px;
+        }
+
+        /* Inline links in editable cells */
+        .inline-link {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid var(--accent-primary);
+            transition: all 0.3s ease;
+            padding: 2px 4px;
+            border-radius: 3px;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(247, 147, 30, 0.1));
+        }
+
+        .inline-link:hover {
+            color: var(--accent-secondary);
+            border-bottom-color: var(--accent-secondary);
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(247, 147, 30, 0.2));
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+        }
+
+        .inline-link:active {
+            transform: translateY(0);
+        }
+
+        .editable:hover {
+            background: linear-gradient(135deg, var(--accent-subtle), rgba(247, 147, 30, 0.05));
+            box-shadow: inset 0 0 0 2px var(--accent-primary);
+        }
+
+        .editable::after {
+            content: '✎ 编辑';
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--accent-primary);
+            opacity: 0;
+            transition: all 0.3s ease;
+            background: var(--bg-elevated);
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+        }
+
+        .editable:hover::after {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        .editing {
+            background: var(--bg-elevated) !important;
+            box-shadow: inset 0 0 0 3px var(--accent-primary) !important;
+            animation: editPulse 0.3s ease;
+        }
+
+        @keyframes editPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .editing textarea {
+            width: 100%;
+            min-width: 200px;
+            padding: var(--space-md);
+            border: none;
+            outline: none;
+            resize: vertical;
+            font-family: var(--font-body);
+            font-size: inherit;
+            line-height: 1.6;
+            min-height: 90px;
+            background: transparent;
+            color: var(--text-primary);
+            border-radius: var(--radius-sm);
+        }
+
+        .editing textarea::placeholder {
+            color: var(--text-tertiary);
+            font-size: 0.9em;
+        }
+
+        /* 9. CHECKBOXES */
+        .status-checkboxes {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            min-width: 120px;
+        }
+
+        .status-checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 0.9rem;
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+
+        .status-checkbox-item:hover {
+            background: var(--accent-subtle);
+            border-color: var(--accent-primary);
+            transform: translateX(3px);
+        }
+
+        .status-checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--status-done);
+            flex-shrink: 0;
+            border-radius: 4px;
+        }
+
+        .status-checkbox-item label {
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .status-checkbox-item.checked {
+            background: var(--status-done-bg);
+            border-color: var(--status-done);
+        }
+
+        .status-checkbox-item.checked label {
+            color: var(--status-done);
+            text-decoration: line-through;
+            font-weight: 600;
+        }
+
+        .status-checkbox-item .task-type {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            margin-left: 4px;
+            padding: 2px 6px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        /* 10. LOCATION CELL */
+        .location-cell,
+        .location-field {
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .location-cell .room,
+        .location-field .room {
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--text-inverse);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            padding: 6px 16px;
+            border-radius: var(--radius-sm);
+            display: inline-block;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .location-cell .room:hover,
+        .location-field .room:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .location-cell .time,
+        .location-field .time {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
+        /* 编辑location时的输入框样式 */
+        .location-field.editing {
+            text-align: left;
+            padding: var(--space-md);
+        }
+
+        .editing-location,
+        .editing-time {
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .editing-location:focus,
+        .editing-time:focus {
+            border-color: var(--accent-secondary) !important;
+            box-shadow: 0 0 0 3px var(--accent-glow) !important;
+        }
+
+        /* 11. RESPONSIVE DESIGN */
+        @media screen and (max-width: 1200px) {
+            .container {
+                padding: var(--space-md);
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: var(--space-sm);
+            }
+
+            .page-header {
+                margin-bottom: var(--space-lg);
+                padding: var(--space-md) 0;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            .info-card {
+                padding: var(--space-sm) var(--space-md);
+                font-size: 0.8rem;
+            }
+
+            .stats-container {
+                padding: var(--space-md);
+            }
+
+            .stats-cards {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                gap: var(--space-sm);
+            }
+
+            .stat-card {
+                padding: var(--space-sm);
+            }
+
+            .schedule-table {
+                font-size: 0.85rem;
+                min-width: 600px;
+            }
+
+            .schedule-table th,
+            .schedule-table td {
+                padding: var(--space-sm) var(--space-md);
+            }
+
+            .status-checkboxes {
+                min-width: 120px;
+            }
+
+            .editable {
+                min-width: 120px;
+            }
+
+            .editable.topic-link {
+                min-width: 180px;
+            }
+
+            .editable::after {
+                display: none;
+            }
+
+            .files-cell {
+                min-width: 150px;
+            }
+
+            .file-upload-btn {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+
+            .file-item {
+                padding: 4px 8px;
+            }
+
+            .file-download {
+                font-size: 0.75rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .stats-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-card .stat-row .label {
+                font-size: 0.65rem;
+            }
+
+            .schedule-table {
+                font-size: 0.75rem;
+                min-width: 500px;
+            }
+
+            .status-checkbox-item {
+                font-size: 0.75rem;
+            }
+
+            .status-checkbox-item input[type="checkbox"] {
+                width: 14px;
+                height: 14px;
+            }
+        }
+
+        /* 12. FILES CELL STYLES */
+        .files-cell {
+            min-width: 200px;
+            max-width: 300px;
+            padding: var(--space-md);
+        }
+
+        .files-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .files-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+            margin-bottom: var(--space-sm);
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: 6px 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .file-item:hover {
+            background: var(--bg-elevated);
+            border-color: var(--accent-primary);
+            transform: translateX(2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .file-download {
+            flex: 1;
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.3s ease;
+        }
+
+        .file-download:hover {
+            color: var(--accent-secondary);
+            text-decoration: underline;
+        }
+
+        .file-size {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            white-space: nowrap;
+            margin-left: auto;
+        }
+
+        .file-delete {
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            font-size: 1.2rem;
+            line-height: 1;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .file-delete:hover {
+            background: #dc2626;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .file-upload-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        .file-upload-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .file-upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+        }
+
+        .file-upload-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(255, 107, 53, 0.3);
+        }
+
+        /* 上传进度条样式 */
+        .file-item.uploading {
+            background: var(--bg-elevated);
+            border-color: var(--accent-primary);
+        }
+
+        .file-progress-container {
+            margin-top: 4px;
+            width: 100%;
+        }
+
+        .file-progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--border-subtle);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .file-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 2px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 8px rgba(255, 107, 53, 0.5);
+        }
+
+        .file-progress-text {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--accent-primary);
+            margin-top: 2px;
+            font-weight: 600;
+        }
+
+        /* 13. PRINT STYLES */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            body::before,
+            body::after {
+                display: none;
+            }
+
+            .container {
+                box-shadow: none;
+                padding: 10px;
+            }
+
+            .schedule-table th {
+                background: linear-gradient(135deg, #f5f5f5, #e5e5e5) !important;
+                color: #1a1a1a !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .status-done,
+            .status-current,
+            .status-holiday {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .status-holiday td:first-child::before {
+                content: '[休]';
+                background: #8b5cf6 !important;
+                color: white !important;
+            }
+
+            .editable::after {
+                display: none;
+            }
+
+            .stat-card:hover,
+            .location-cell .room:hover,
+            .location-field .room:hover {
+                transform: none;
+            }
+        }
+
+        /* 14. LOADING & NOTIFICATIONS */
+        .notification {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            padding: var(--space-lg) var(--space-xl);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            z-index: 10000;
+            max-width: 360px;
+            font-size: 1rem;
+            animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            border-color: #991b1b;
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, var(--status-done), #059669);
+            color: white;
+            border-color: #047857;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(254, 249, 243, 0.95);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .loading-spinner {
+            width: 56px;
+            height: 56px;
+            border: 4px solid var(--border-subtle);
+            border-top-color: var(--accent-primary);
+            border-right-color: var(--accent-secondary);
+            border-radius: 50%;
+            animation: spin 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+            box-shadow: 0 0 30px rgba(255, 107, 53, 0.3);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="page-header">
+        <h1>科研中心大模型技术团队<span class="accent">知识分享</span>表<span class="accent">(2025-2026)</span></h1>
+        <p class="page-subtitle">Team Knowledge Sharing Schedule</p>
+    </header>
+
+    <div class="info-card">
+        **💡 排班说明：** 排班固定在每周五，遇到法定节假日则任务视具体情况而定。
+        <br>
+        **💻 可编辑说明：** 双击表格中"主题"、"备注"列的单元格即可编辑（支持换行，Option/Shift+Enter换行，Enter保存）。内容会自动保存在您的浏览器中。
+    </div>
+
+    <!-- 留言板区域 -->
+    <div class="message-board">
+        <div class="message-board-grid">
+            <div class="message-section">
+                <h3>问题反馈</h3>
+                <!-- 统计区域 -->
+                <div class="feedback-stats" id="feedbackStats">
+                    <div class="feedback-stat-item total">
+                        <span class="stat-label">总计</span>
+                        <span class="stat-value" id="feedbackTotal">0</span>
+                    </div>
+                    <div class="feedback-stat-item completed">
+                        <span class="stat-label">已完成</span>
+                        <span class="stat-value" id="feedbackCompleted">0</span>
+                    </div>
+                    <div class="feedback-stat-item pending">
+                        <span class="stat-label">待处理</span>
+                        <span class="stat-value" id="feedbackPending">0</span>
+                    </div>
+                </div>
+                <div class="feedback-table-container">
+                    <div class="feedback-table-wrapper">
+                        <table class="feedback-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th style="width: 110px;">日期</th>
+                                    <th style="width: 110px;">问题种类</th>
+                                    <th style="min-width: 300px;">简要描述</th>
+                                    <th style="width: 90px;">完成状态</th>
+                                    <th style="width: 50px;">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="feedbackBody">
+                                <!-- 留言数据由JS动态生成 -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="add-feedback-btn" id="addFeedbackBtn">+ 添加反馈</button>
+                </div>
+            </div>
+            <div class="notice-section">
+                <h3>重要公告</h3>
+                <div id="noticeContent" class="notice-content empty" data-type="notice">
+                    点击此处发布公告...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 统计可视化区域 -->
+    <div class="stats-container">
+        <h2>已完成分享统计</h2>
+        <div id="statsCards" class="stats-cards">
+            <!-- 统计卡片将由JS动态生成 -->
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="schedule-table">
+            <thead>
+                <tr class="header-row">
+                    <th>#</th>
+                    <th>日期</th>
+                    <th>地点/时间</th>
+                    <th>主题 & 文档链接</th>
+                    <th>文件（不超过50M）</th>
+                    <th>备注</th>
+                    <th>完成情况</th>
+                </tr>
+            </thead>
+            <tbody id="scheduleBody">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // --- API 配置 ---
+    // 自动检测环境：
+    // - 本地开发: http://localhost:3000
+    // - 局域网访问: 自动使用当前访问的IP地址 + 3000端口
+    // - 生产环境: 如需部署到云服务器，请修改下面的逻辑
+    const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:3000'
+        : `http://${window.location.hostname}:3000`;  // 自动使用当前hostname
+
+    console.log('🔗 API Base URL:', API_BASE_URL);
+    console.log('🌐 Current hostname:', window.location.hostname);
+
+    // --- 1. 数据定义：2026年全年的排班信息 ---
+    let scheduleData = [
+        // ===== 2025年 (从Excel导入) =====
+        {week: 1, date: "2025-11-28", T1: "李佳晟", T2_1: "解勇宝", T2_2: "班新博", T3: "", topic: "工具：磐石ScienceOne / Chain-of-Thought Prompting...", remark: "", location: "201", time: "9:30-11:30", T1_done: true, T2_1_done: true, T2_2_done: true, T3_done: false, isHoliday: false},
+        {week: 2, date: "2025-12-05", T1: "班新博", T2_1: "龚丽", T2_2: "叶玮佳", T3: "李佳晟", topic: "iFlow CLI / MinerU2.5... / Agentic AI", remark: "", location: "201", time: "9:30-11:30", T1_done: true, T2_1_done: true, T2_2_done: true, T3_done: true, isHoliday: false},
+        {week: 3, date: "2025-12-12", T1: "解勇宝", T2_1: "叶玮佳", T2_2: "龚丽", T3: "", topic: "SAM 3: Segment Anything with Concepts...", remark: "", location: "201", time: "9:30-11:30", T1_done: true, T2_1_done: true, T2_2_done: true, T3_done: false, isHoliday: false},
+        {week: 4, date: "2025-12-19", T1: "龚丽", T2_1: "李佳晟", T2_2: "班新博", T3: "解勇宝", topic: "", remark: "", location: "201", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 5, date: "2025-12-26", T1: "叶玮佳", T2_1: "班新博", T2_2: "李佳晟", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+
+        // ===== 2026年第一季度 =====
+        {week: 6, date: "2026-01-02", T1: "李佳晟", T2_1: "解勇宝", T2_2: "龚丽", T3: "叶玮佳", topic: "", remark: "假期冲突（元旦1月1-3日），时间视具体情况定", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 7, date: "2026-01-09", T1: "班新博", T2_1: "龚丽", T2_2: "解勇宝", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 8, date: "2026-01-16", T1: "解勇宝", T2_1: "叶玮佳", T2_2: "李佳晟", T3: "班新博", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 9, date: "2026-01-23", T1: "龚丽", T2_1: "李佳晟", T2_2: "叶玮佳", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 10, date: "2026-01-30", T1: "叶玮佳", T2_1: "班新博", T2_2: "解勇宝", T3: "龚丽", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 11, date: "2026-02-06", T1: "李佳晟", T2_1: "解勇宝", T2_2: "班新博", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 12, date: "2026-02-13", T1: "班新博", T2_1: "龚丽", T2_2: "叶玮佳", T3: "李佳晟", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 13, date: "2026-02-20", T1: "解勇宝", T2_1: "叶玮佳", T2_2: "龚丽", T3: "", topic: "", remark: "假期冲突（春节2月15-23日），时间视具体情况定", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 14, date: "2026-02-27", T1: "龚丽", T2_1: "李佳晟", T2_2: "班新博", T3: "解勇宝", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 15, date: "2026-03-06", T1: "叶玮佳", T2_1: "班新博", T2_2: "李佳晟", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 16, date: "2026-03-13", T1: "李佳晟", T2_1: "解勇宝", T2_2: "龚丽", T3: "叶玮佳", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 17, date: "2026-3-20", T1: "班新博", T2_1: "龚丽", T2_2: "解勇宝", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 18, date: "2026-3-27", T1: "解勇宝", T2_1: "叶玮佳", T2_2: "李佳晟", T3: "班新博", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+
+        // ===== 2026年第二季度 =====
+        {week: 19, date: "2026-04-03", T1: "龚丽", T2_1: "李佳晟", T2_2: "叶玮佳", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 20, date: "2026-04-10", T1: "叶玮佳", T2_1: "班新博", T2_2: "解勇宝", T3: "龚丽", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 21, date: "2026-04-17", T1: "李佳晟", T2_1: "解勇宝", T2_2: "班新博", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 22, date: "2026-04-24", T1: "班新博", T2_1: "龚丽", T2_2: "叶玮佳", T3: "李佳晟", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 23, date: "2026-05-01", T1: "解勇宝", T2_1: "叶玮佳", T2_2: "龚丽", T3: "", topic: "", remark: "假期冲突（劳动节5月1-5日），时间视具体情况定", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 24, date: "2026-05-08", T1: "龚丽", T2_1: "李佳晟", T2_2: "班新博", T3: "解勇宝", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 25, date: "2026-05-15", T1: "叶玮佳", T2_1: "班新博", T2_2: "李佳晟", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 26, date: "2026-05-22", T1: "李佳晟", T2_1: "解勇宝", T2_2: "龚丽", T3: "叶玮佳", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 27, date: "2026-05-29", T1: "班新博", T2_1: "龚丽", T2_2: "解勇宝", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 28, date: "2026-06-05", T1: "解勇宝", T2_1: "叶玮佳", T2_2: "李佳晟", T3: "班新博", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 29, date: "2026-06-21", T1: "龚丽", T2_1: "李佳晟", T2_2: "叶玮佳", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 30, date: "2026-06-19", T1: "叶玮佳", T2_1: "班新博", T2_2: "解勇宝", T3: "龚丽", topic: "", remark: "假期冲突（端午节6月19-21日），时间视具体情况定", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 31, date: "2026-06-26", T1: "李佳晟", T2_1: "解勇宝", T2_2: "班新博", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+
+        // ===== 2026年第三季度 =====
+        {week: 32, date: "2026-07-03", T1: "班新博", T2_1: "龚丽", T2_2: "叶玮佳", T3: "李佳晟", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 33, date: "2026-07-10", T1: "解勇宝", T2_1: "叶玮佳", T2_2: "龚丽", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 34, date: "2026-07-17", T1: "龚丽", T2_1: "李佳晟", T2_2: "班新博", T3: "解勇宝", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 35, date: "2026-07-24", T1: "叶玮佳", T2_1: "班新博", T2_2: "李佳晟", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 36, date: "2026-07-31", T1: "李佳晟", T2_1: "解勇宝", T2_2: "龚丽", T3: "叶玮佳", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 37, date: "2026-08-07", T1: "班新博", T2_1: "龚丽", T2_2: "解勇宝", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 38, date: "2026-08-14", T1: "解勇宝", T2_1: "叶玮佳", T2_2: "李佳晟", T3: "班新博", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 39, date: "2026-08-21", T1: "龚丽", T2_1: "李佳晟", T2_2: "叶玮佳", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 40, date: "2026-08-28", T1: "叶玮佳", T2_1: "班新博", T2_2: "解勇宝", T3: "龚丽", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 41, date: "2026-09-04", T1: "李佳晟", T2_1: "解勇宝", T2_2: "班新博", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 42, date: "2026-09-11", T1: "班新博", T2_1: "龚丽", T2_2: "叶玮佳", T3: "李佳晟", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 43, date: "2026-09-18", T1: "解勇宝", T2_1: "叶玮佳", T2_2: "龚丽", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 44, date: "2026-09-25", T1: "龚丽", T2_1: "李佳晟", T2_2: "班新博", T3: "解勇宝", topic: "", remark: "假期冲突（中秋节9月25-27日），时间视具体情况定", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+
+        // ===== 2026年第四季度 =====
+        {week: 45, date: "2026-10-02", T1: "叶玮佳", T2_1: "班新博", T2_2: "李佳晟", T3: "", topic: "", remark: "假期冲突（国庆节10月1-7日），时间视具体情况定", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 46, date: "2026-10-09", T1: "李佳晟", T2_1: "解勇宝", T2_2: "龚丽", T3: "叶玮佳", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 47, date: "2026-10-16", T1: "班新博", T2_1: "龚丽", T2_2: "解勇宝", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 48, date: "2026-10-23", T1: "解勇宝", T2_1: "叶玮佳", T2_2: "李佳晟", T3: "班新博", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 49, date: "2026-10-30", T1: "龚丽", T2_1: "李佳晟", T2_2: "叶玮佳", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 50, date: "2026-11-06", T1: "叶玮佳", T2_1: "班新博", T2_2: "解勇宝", T3: "龚丽", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 51, date: "2026-11-13", T1: "李佳晟", T2_1: "解勇宝", T2_2: "班新博", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 52, date: "2026-11-20", T1: "班新博", T2_1: "龚丽", T2_2: "叶玮佳", T3: "李佳晟", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 53, date: "2026-11-27", T1: "解勇宝", T2_1: "叶玮佳", T2_2: "龚丽", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 54, date: "2026-12-04", T1: "龚丽", T2_1: "李佳晟", T2_2: "班新博", T3: "解勇宝", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 55, date: "2026-12-11", T1: "叶玮佳", T2_1: "班新博", T2_2: "李佳晟", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 56, date: "2026-12-18", T1: "李佳晟", T2_1: "解勇宝", T2_2: "龚丽", T3: "叶玮佳", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+        {week: 57, date: "2026-12-25", T1: "班新博", T2_1: "龚丽", T2_2: "解勇宝", T3: "", topic: "", remark: "", location: "603", time: "9:30-11:30", T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+
+        // 排班结束
+    ];
+
+    // --- 2. 核心功能：表格渲染 ---
+    const scheduleBody = document.getElementById('scheduleBody');
+    const statsCardsContainer = document.getElementById('statsCards');
+    const members = ['班新博', '龚丽', '李佳晟', '解勇宝', '叶玮佳'];
+
+    // 将文本中的URL转换为可点击的链接
+    function linkifyText(text) {
+        if (!text) return '';
+
+        // URL正则表达式，匹配http(s)://开头的链接
+        // 匹配到空白、换行或常见的结尾标点符号（不包括标点作为链接的一部分）
+        const urlRegex = /(https?:\/\/[^\s<>"]+)/gi;
+
+        // 替换URL为可点击的链接
+        return text.replace(urlRegex, (match) => {
+            // 去除URL末尾的标点符号（中英文括号、句号、逗号等）
+            let url = match;
+            const trailingPunctuation = /[)）,.;:!?。，、；：！？》」】]+$/;
+            const punctMatch = url.match(trailingPunctuation);
+            let trailing = '';
+
+            if (punctMatch) {
+                trailing = punctMatch[0];
+                url = url.slice(0, -trailing.length);
+            }
+
+            return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="inline-link" onclick="event.stopPropagation();">${url}</a>${trailing}`;
+        });
+    }
+
+    // 统计各成员已完成的分享次数（根据勾选状态）
+    function calculateStats() {
+        const stats = {};
+        members.forEach(name => {
+            stats[name] = { T1: 0, T2: 0, T3: 0, total: 0 };
+        });
+
+        scheduleData.forEach(item => {
+            // T1: AI/产品分析
+            if (item.T1 && item.T1_done && stats[item.T1]) {
+                stats[item.T1].T1++;
+                stats[item.T1].total++;
+            }
+            // T2_1: 论文研读
+            if (item.T2_1 && item.T2_1_done && stats[item.T2_1]) {
+                stats[item.T2_1].T2++;
+                stats[item.T2_1].total++;
+            }
+            // T2_2: 论文研读
+            if (item.T2_2 && item.T2_2_done && stats[item.T2_2]) {
+                stats[item.T2_2].T2++;
+                stats[item.T2_2].total++;
+            }
+            // T3: 技术主题分享
+            if (item.T3 && item.T3_done && stats[item.T3]) {
+                stats[item.T3].T3++;
+                stats[item.T3].total++;
+            }
+        });
+
+        return stats;
+    }
+
+    // 渲染统计卡片
+    function renderStats() {
+        const stats = calculateStats();
+
+        // 如果统计卡片已存在，只更新数值，不重建DOM
+        const existingCards = statsCardsContainer.querySelectorAll('.stat-card');
+
+        if (existingCards.length === members.length) {
+            // 只更新数值，避免重建DOM造成闪烁
+            let needsRebuild = false;
+
+            members.forEach((name, idx) => {
+                const s = stats[name];
+                const card = existingCards[idx];
+
+                if (card) {
+                    // 添加严格的null检查
+                    const t1Value = card.querySelector('.stat-row:nth-of-type(1) .value');
+                    const t2Value = card.querySelector('.stat-row:nth-of-type(2) .value');
+                    const t3Value = card.querySelector('.stat-row:nth-of-type(3) .value');
+                    const totalValue = card.querySelector('.total-row .value');
+
+                    if (t1Value && t2Value && t3Value && totalValue) {
+                        t1Value.textContent = s.T1;
+                        t2Value.textContent = s.T2;
+                        t3Value.textContent = s.T3;
+                        totalValue.textContent = s.total;
+                    } else {
+                        // 如果DOM结构不完整，标记需要重建
+                        needsRebuild = true;
+                    }
+                } else {
+                    needsRebuild = true;
+                }
+            });
+
+            // 如果检测到DOM问题，重建统计卡片
+            if (needsRebuild) {
+                rebuildStatsCards(stats);
+            }
+        } else {
+            // 首次渲染或成员数量变化时，重建DOM
+            rebuildStatsCards(stats);
+        }
+    }
+
+    // 重建统计卡片DOM
+    function rebuildStatsCards(stats) {
+        statsCardsContainer.innerHTML = '';
+
+        members.forEach(name => {
+            const s = stats[name];
+            const card = document.createElement('div');
+            card.className = `stat-card p-${name}`;
+            card.innerHTML = `
+                <div class="name">${name}</div>
+                <div class="stat-row">
+                    <span class="label">AI/产品工具</span>
+                    <span class="value">${s.T1}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">论文/开源项目</span>
+                    <span class="value">${s.T2}</span>
+                </div>
+                <div class="stat-row">
+                    <span class="label">技术主题分享</span>
+                    <span class="value">${s.T3}</span>
+                </div>
+                <div class="total-row">
+                    <span class="label">总计</span>
+                    <span class="value">${s.total}</span>
+                </div>
+            `;
+            statsCardsContainer.appendChild(card);
+        });
+    }
+
+    function renderSchedule() {
+        scheduleBody.innerHTML = ''; // 清空现有内容
+        const today = new Date().toISOString().split('T')[0];
+
+        // 找到最近或当前未完成的任务的行索引（至少有一个任务未完成）
+        const firstPendingIndex = scheduleData.findIndex(d =>
+            !d.isHoliday && (
+                (d.T1 && !d.T1_done) ||
+                (d.T2_1 && !d.T2_1_done) ||
+                (d.T2_2 && !d.T2_2_done) ||
+                (d.T3 && !d.T3_done)
+            )
+        );
+
+        scheduleData.forEach((item, index) => {
+            const row = scheduleBody.insertRow();
+            let rowClass = '';
+
+            // 检查是否所有任务都已完成
+            const allDone = !item.isHoliday && (
+                (!item.T1 || item.T1_done) &&
+                (!item.T2_1 || item.T2_1_done) &&
+                (!item.T2_2 || item.T2_2_done) &&
+                (!item.T3 || item.T3_done)
+            ) && (item.T1 || item.T2_1 || item.T2_2 || item.T3); // 至少有一个任务
+
+            // 检查状态以添加可视化类
+            if (item.isHoliday) {
+                rowClass = 'status-holiday';
+            } else if (allDone) {
+                rowClass = 'status-done';
+            } else if (index === firstPendingIndex) {
+                // 标记最近要进行的任务
+                rowClass = 'status-current';
+            }
+            row.className = rowClass;
+
+            // 填充数据行
+            row.insertCell().textContent = item.week; // 周数
+            row.insertCell().textContent = item.date; // 日期
+
+            // 会议地点 (可编辑)
+            const locationCell = row.insertCell();
+            locationCell.className = 'editable location-field';
+            if (!item.isHoliday) {
+                const room = item.location || '201';
+                const time = item.time || '9:30-11:30';
+                locationCell.innerHTML = `<div class="room">${room}</div><div class="time">${time}</div>`;
+            }
+            locationCell.setAttribute('data-index', index);
+            locationCell.setAttribute('data-field', 'location');
+
+            // 可编辑单元格 (主题 & 链接)
+            const topicCell = row.insertCell();
+            topicCell.className = 'editable topic-link';
+            // 先替换换行符，然后将URL转换为可点击的链接
+            const topicWithBreaks = item.topic ? item.topic.replace(/\n/g, '<br>') : '';
+            topicCell.innerHTML = linkifyText(topicWithBreaks);
+            topicCell.setAttribute('data-index', index); // 用于数据绑定
+            topicCell.setAttribute('data-field', 'topic');
+
+            // 文件上传/下载单元格
+            const filesCell = row.insertCell();
+            filesCell.className = 'files-cell';
+            filesCell.setAttribute('data-index', index);
+            if (!item.files) item.files = []; // 初始化files数组
+            filesCell.innerHTML = renderFilesCell(item.files, index);
+
+            // 备注单元格
+            const remarkCell = row.insertCell();
+            remarkCell.className = 'editable remark-field';
+            remarkCell.innerHTML = item.remark ? item.remark.replace(/\n/g, '<br>') : '';
+            remarkCell.setAttribute('data-index', index);
+            remarkCell.setAttribute('data-field', 'remark');
+
+            // 完成状态勾选框单元格
+            const statusCell = row.insertCell();
+            statusCell.innerHTML = createCheckboxes(item, index);
+        });
+
+        addEditableListeners();
+        addCheckboxListeners();
+        addFileListeners();
+        renderStats(); // 更新统计
+    }
+
+    // --- 文件上传/下载功能 ---
+
+    // 渲染文件单元格
+    function renderFilesCell(files, index, uploadingFiles = []) {
+        let html = '<div class="files-container">';
+
+        // 显示已上传的文件列表
+        if (files && files.length > 0) {
+            html += '<div class="files-list">';
+            files.forEach((file, fileIndex) => {
+                const fileName = file.name || file.filename || `文件${fileIndex + 1}`;
+                const fileSize = file.size ? formatFileSize(file.size) : '';
+                html += `
+                    <div class="file-item">
+                        <a href="#" class="file-download" data-index="${index}" data-file-index="${fileIndex}" title="${fileName}">
+                            📎 ${truncateFileName(fileName, 20)}
+                        </a>
+                        <span class="file-size">${fileSize}</span>
+                        <button class="file-delete" data-index="${index}" data-file-index="${fileIndex}" title="删除文件">×</button>
+                    </div>
+                `;
+            });
+            html += '</div>';
+        }
+
+        // 显示正在上传的文件
+        if (uploadingFiles && uploadingFiles.length > 0) {
+            if (!files || files.length === 0) {
+                html += '<div class="files-list">';
+            }
+            uploadingFiles.forEach((uploadingFile, idx) => {
+                const fileName = uploadingFile.name;
+                const progress = uploadingFile.progress || 0;
+                html += `
+                    <div class="file-item uploading" id="uploading-file-${index}-${idx}">
+                        <div style="flex: 1; min-width: 0;">
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <span style="color: var(--accent-primary);">📤</span>
+                                <span class="file-download" style="flex: 1; min-width: 0; pointer-events: none;">${truncateFileName(fileName, 20)}</span>
+                            </div>
+                            <div class="file-progress-container">
+                                <div class="file-progress-bar">
+                                    <div class="file-progress-fill" style="width: ${progress}%"></div>
+                                </div>
+                                <div class="file-progress-text">${progress}%</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            if (!files || files.length === 0) {
+                html += '</div>';
+            }
+        }
+
+        // 上传按钮
+        html += `
+            <div class="file-upload-wrapper">
+                <input type="file" id="file-input-${index}" class="file-input" data-index="${index}" multiple style="display: none;">
+                <button class="file-upload-btn" data-index="${index}" title="上传文件">
+                    📤 上传
+                </button>
+            </div>
+        `;
+
+        html += '</div>';
+        return html;
+    }
+
+    // 格式化文件大小
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 B';
+        const k = 1024;
+        const sizes = ['B', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+    }
+
+    // 截断文件名
+    function truncateFileName(fileName, maxLength) {
+        if (fileName.length <= maxLength) return fileName;
+        const extension = fileName.split('.').pop();
+        const nameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
+        const truncatedName = nameWithoutExt.substring(0, maxLength - extension.length - 4) + '...';
+        return truncatedName + '.' + extension;
+    }
+
+    // 绑定文件相关事件监听器
+    function addFileListeners() {
+        // 上传按钮点击事件
+        document.querySelectorAll('.file-upload-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const index = e.target.getAttribute('data-index');
+                document.getElementById(`file-input-${index}`).click();
+            });
+        });
+
+        // 文件选择事件
+        document.querySelectorAll('.file-input').forEach(input => {
+            input.addEventListener('change', async (e) => {
+                const index = parseInt(e.target.getAttribute('data-index'));
+                const files = Array.from(e.target.files);
+
+                if (files.length > 0) {
+                    await handleFileUpload(index, files);
+                    e.target.value = ''; // 清空input，允许重复上传同一文件
+                }
+            });
+        });
+
+        // 文件下载事件
+        document.querySelectorAll('.file-download').forEach(link => {
+            link.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const index = parseInt(e.target.getAttribute('data-index'));
+                const fileIndex = parseInt(e.target.getAttribute('data-file-index'));
+                await handleFileDownload(index, fileIndex);
+            });
+        });
+
+        // 文件删除事件
+        document.querySelectorAll('.file-delete').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const index = parseInt(e.target.getAttribute('data-index'));
+                const fileIndex = parseInt(e.target.getAttribute('data-file-index'));
+
+                if (confirm('确定要删除这个文件吗？')) {
+                    await handleFileDelete(index, fileIndex);
+                }
+            });
+        });
+    }
+
+    // 处理文件上传
+    async function handleFileUpload(index, files) {
+        const item = scheduleData[index];
+        if (!item.files) item.files = [];
+
+        // 准备上传文件信息（用于显示进度）
+        const uploadingFiles = Array.from(files).map(file => ({
+            name: file.name,
+            progress: 0
+        }));
+
+        try {
+            // 获取文件单元格并渲染上传中的文件
+            const filesCell = document.querySelector(`.files-cell[data-index="${index}"]`);
+            if (filesCell) {
+                filesCell.innerHTML = renderFilesCell(item.files, index, uploadingFiles);
+                addFileListeners(); // 重新绑定事件监听器
+            }
+
+            const formData = new FormData();
+            files.forEach(file => {
+                formData.append('files', file);
+            });
+            formData.append('scheduleId', item.id || index);
+
+            // 使用 XMLHttpRequest 以支持进度监听
+            const result = await new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+
+                // 监听上传进度
+                xhr.upload.addEventListener('progress', (e) => {
+                    if (e.lengthComputable) {
+                        const percentComplete = Math.round((e.loaded / e.total) * 100);
+
+                        // 更新所有文件的进度（简化处理，所有文件显示相同进度）
+                        uploadingFiles.forEach((file, idx) => {
+                            file.progress = percentComplete;
+
+                            // 实时更新进度条
+                            const progressFill = document.querySelector(`#uploading-file-${index}-${idx} .file-progress-fill`);
+                            const progressText = document.querySelector(`#uploading-file-${index}-${idx} .file-progress-text`);
+
+                            if (progressFill) {
+                                progressFill.style.width = `${percentComplete}%`;
+                            }
+                            if (progressText) {
+                                progressText.textContent = `${percentComplete}%`;
+                            }
+                        });
+                    }
+                });
+
+                // 上传完成
+                xhr.addEventListener('load', () => {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            resolve(response);
+                        } catch (e) {
+                            reject(new Error('解析响应失败'));
+                        }
+                    } else {
+                        reject(new Error(`上传失败: ${xhr.status}`));
+                    }
+                });
+
+                // 上传出错
+                xhr.addEventListener('error', () => {
+                    reject(new Error('网络错误'));
+                });
+
+                // 上传中止
+                xhr.addEventListener('abort', () => {
+                    reject(new Error('上传已取消'));
+                });
+
+                // 发送请求
+                xhr.open('POST', `${API_BASE_URL}/schedule/${item.id || index}/files`);
+                xhr.send(formData);
+            });
+
+            // 更新本地数据
+            if (result.files) {
+                item.files = result.files;
+            } else {
+                // 如果后端不返回完整文件列表，手动添加
+                files.forEach(file => {
+                    item.files.push({
+                        name: file.name,
+                        size: file.size,
+                        uploadDate: new Date().toISOString()
+                    });
+                });
+            }
+
+            scheduleData[index] = item;
+            await updateScheduleItem(index);
+
+            // 重新渲染文件列表（移除上传中的文件，显示已上传的文件）
+            if (filesCell) {
+                filesCell.innerHTML = renderFilesCell(item.files, index);
+                addFileListeners();
+            }
+
+            showSuccess(`成功上传 ${files.length} 个文件`);
+        } catch (error) {
+            console.error('文件上传失败:', error);
+            showError(`文件上传失败: ${error.message}`);
+
+            // 上传失败，重新渲染（移除上传中的文件）
+            const filesCell = document.querySelector(`.files-cell[data-index="${index}"]`);
+            if (filesCell) {
+                filesCell.innerHTML = renderFilesCell(item.files, index);
+                addFileListeners();
+            }
+        }
+    }
+
+    // 处理文件下载
+    async function handleFileDownload(index, fileIndex) {
+        const item = scheduleData[index];
+        const file = item.files[fileIndex];
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/schedule/${item.id || index}/files/${fileIndex}`);
+
+            if (!response.ok) {
+                throw new Error(`下载失败: ${response.status}`);
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = file.name || `file_${fileIndex}`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
+            showSuccess('文件下载成功');
+        } catch (error) {
+            console.error('文件下载失败:', error);
+            showError(`文件下载失败: ${error.message}`);
+        }
+    }
+
+    // 处理文件删除
+    async function handleFileDelete(index, fileIndex) {
+        const item = scheduleData[index];
+
+        try {
+            showLoading(true);
+
+            const response = await fetch(`${API_BASE_URL}/schedule/${item.id || index}/files/${fileIndex}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error(`删除失败: ${response.status}`);
+            }
+
+            // 从本地数据中删除
+            item.files.splice(fileIndex, 1);
+            scheduleData[index] = item;
+            await updateScheduleItem(index);
+            renderSchedule();
+            showSuccess('文件删除成功');
+        } catch (error) {
+            console.error('文件删除失败:', error);
+            showError(`文件删除失败: ${error.message}`);
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    // 创建勾选框HTML
+    function createCheckboxes(item, index) {
+        let html = '<div class="status-checkboxes">';
+
+        if (item.T1) {
+            html += `
+                <div class="status-checkbox-item ${item.T1_done ? 'checked' : ''}">
+                    <input type="checkbox" id="cb_${index}_T1" data-index="${index}" data-field="T1_done" ${item.T1_done ? 'checked' : ''}>
+                    <label for="cb_${index}_T1">${item.T1}<span class="task-type">(AI工具)</span></label>
+                </div>`;
+        }
+        if (item.T2_1) {
+            html += `
+                <div class="status-checkbox-item ${item.T2_1_done ? 'checked' : ''}">
+                    <input type="checkbox" id="cb_${index}_T2_1" data-index="${index}" data-field="T2_1_done" ${item.T2_1_done ? 'checked' : ''}>
+                    <label for="cb_${index}_T2_1">${item.T2_1}<span class="task-type">(论文/开源项目)</span></label>
+                </div>`;
+        }
+        if (item.T2_2) {
+            html += `
+                <div class="status-checkbox-item ${item.T2_2_done ? 'checked' : ''}">
+                    <input type="checkbox" id="cb_${index}_T2_2" data-index="${index}" data-field="T2_2_done" ${item.T2_2_done ? 'checked' : ''}>
+                    <label for="cb_${index}_T2_2">${item.T2_2}<span class="task-type">(论文/开源项目)</span></label>
+                </div>`;
+        }
+        if (item.T3) {
+            html += `
+                <div class="status-checkbox-item ${item.T3_done ? 'checked' : ''}">
+                    <input type="checkbox" id="cb_${index}_T3" data-index="${index}" data-field="T3_done" ${item.T3_done ? 'checked' : ''}>
+                    <label for="cb_${index}_T3">${item.T3}<span class="task-type">(技术)</span></label>
+                </div>`;
+        }
+
+        html += '</div>';
+        return html;
+    }
+
+    // 绑定勾选框事件
+    function addCheckboxListeners() {
+        document.querySelectorAll('.status-checkboxes input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', async (e) => {
+                const index = parseInt(e.target.getAttribute('data-index'));
+                const field = e.target.getAttribute('data-field');
+                scheduleData[index][field] = e.target.checked;
+
+                // 更新勾选框样式
+                const item = e.target.closest('.status-checkbox-item');
+                if (e.target.checked) {
+                    item.classList.add('checked');
+                } else {
+                    item.classList.remove('checked');
+                }
+
+                // 保存到API
+                await updateScheduleItem(index);
+                renderStats(); // 更新统计
+
+                // 检查是否需要更新行样式
+                updateRowStyle(index);
+            });
+        });
+    }
+
+    // 更新行样式（根据完成状态）
+    function updateRowStyle(index) {
+        const item = scheduleData[index];
+        const row = scheduleBody.rows[index];
+
+        if (item.isHoliday) return;
+
+        const allDone = (
+            (!item.T1 || item.T1_done) &&
+            (!item.T2_1 || item.T2_1_done) &&
+            (!item.T2_2 || item.T2_2_done) &&
+            (!item.T3 || item.T3_done)
+        ) && (item.T1 || item.T2_1 || item.T2_2 || item.T3);
+
+        row.classList.remove('status-done', 'status-current');
+        if (allDone) {
+            row.classList.add('status-done');
+        }
+
+        // 重新计算第一个待完成的行
+        const firstPendingIndex = scheduleData.findIndex(d =>
+            !d.isHoliday && (
+                (d.T1 && !d.T1_done) ||
+                (d.T2_1 && !d.T2_1_done) ||
+                (d.T2_2 && !d.T2_2_done) ||
+                (d.T3 && !d.T3_done)
+            )
+        );
+
+        // 更新所有行的current状态
+        Array.from(scheduleBody.rows).forEach((r, i) => {
+            r.classList.remove('status-current');
+            if (i === firstPendingIndex && !scheduleData[i].isHoliday) {
+                const itemAtIndex = scheduleData[i];
+                const isAllDone = (
+                    (!itemAtIndex.T1 || itemAtIndex.T1_done) &&
+                    (!itemAtIndex.T2_1 || itemAtIndex.T2_1_done) &&
+                    (!itemAtIndex.T2_2 || itemAtIndex.T2_2_done) &&
+                    (!itemAtIndex.T3 || itemAtIndex.T3_done)
+                );
+                if (!isAllDone) {
+                    r.classList.add('status-current');
+                }
+            }
+        });
+    }
+
+    // --- 3. 交互功能：实现可编辑性与数据保存 ---
+
+    // 绑定双击编辑事件
+    function addEditableListeners() {
+        document.querySelectorAll('.editable').forEach(cell => {
+            // 移除旧监听器以防止重复绑定
+            cell.removeEventListener('dblclick', handleDoubleClick);
+            cell.addEventListener('dblclick', handleDoubleClick);
+        });
+    }
+
+    // 双击处理函数
+    function handleDoubleClick(e) {
+        const cell = e.currentTarget;
+        const index = cell.getAttribute('data-index');
+        const field = cell.getAttribute('data-field');
+
+        if (cell.querySelector('input') || cell.querySelector('textarea')) return; // 避免重复编辑
+
+        // 特殊处理地点/时间字段
+        if (field === 'location') {
+            const item = scheduleData[index];
+            const currentLocation = item.location || '201';
+            const currentTime = item.time || '9:30-11:30';
+
+            cell.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <input type="text" class="editing-location" value="${currentLocation}" placeholder="会议室" style="width: 100%; padding: 8px; border: 2px solid var(--accent-primary); border-radius: 6px; font-family: var(--font-mono); font-size: 0.95rem; background: var(--bg-elevated); color: var(--text-primary);">
+                    <input type="text" class="editing-time" value="${currentTime}" placeholder="时间" style="width: 100%; padding: 8px; border: 2px solid var(--accent-primary); border-radius: 6px; font-family: var(--font-mono); font-size: 0.85rem; background: var(--bg-elevated); color: var(--text-primary);">
+                </div>
+            `;
+            cell.classList.add('editing');
+
+            const locationInput = cell.querySelector('.editing-location');
+            const timeInput = cell.querySelector('.editing-time');
+            locationInput.focus();
+            locationInput.select();
+
+            // 保存函数
+            const saveLocation = async () => {
+                const newLocation = locationInput.value.trim() || '603';
+                const newTime = timeInput.value.trim() || '9:30-11:30';
+                scheduleData[index].location = newLocation;
+                scheduleData[index].time = newTime;
+                cell.innerHTML = `<div class="room">${newLocation}</div><div class="time">${newTime}</div>`;
+                cell.classList.remove('editing');
+
+                // 保存到API
+                await updateScheduleItem(index);
+            };
+
+            // 失去焦点时保存
+            locationInput.addEventListener('blur', (e) => {
+                // 如果焦点移到time输入框，不保存
+                if (e.relatedTarget !== timeInput) {
+                    setTimeout(saveLocation, 100);
+                }
+            });
+
+            timeInput.addEventListener('blur', (e) => {
+                // 如果焦点移到location输入框，不保存
+                if (e.relatedTarget !== locationInput) {
+                    setTimeout(saveLocation, 100);
+                }
+            });
+
+            // Enter键保存
+            locationInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    timeInput.focus();
+                    timeInput.select();
+                }
+            });
+
+            timeInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    saveLocation();
+                }
+            });
+
+            return;
+        }
+
+        // 对于 'topic' 和 'remark' 字段，使用多行文本框
+        // 将 <br> 转换回换行符以便编辑
+        const editText = cell.innerHTML.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '').trim();
+        cell.innerHTML = `<textarea class="editing" rows="4" placeholder="Option/Shift+Enter换行，Enter保存">${editText}</textarea>`;
+        cell.classList.add('editing');
+
+        const textarea = cell.querySelector('textarea');
+        textarea.focus();
+        // 光标移到末尾
+        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+
+        // 失去焦点时保存数据
+        textarea.addEventListener('blur', async () => {
+            const newText = textarea.value.trim();
+            scheduleData[index][field] = newText;
+
+            // 如果是 topic 字段，将URL转换为可点击的链接
+            if (field === 'topic') {
+                const textWithBreaks = newText ? newText.replace(/\n/g, '<br>') : '';
+                cell.innerHTML = linkifyText(textWithBreaks);
+            } else {
+                cell.innerHTML = newText ? newText.replace(/\n/g, '<br>') : '';
+            }
+
+            cell.classList.remove('editing');
+
+            // 保存到API
+            await updateScheduleItem(index);
+            renderSchedule();
+        });
+
+        // Enter 保存，Shift+Enter 或 Option+Enter 换行
+        textarea.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                if (event.shiftKey || event.altKey || event.metaKey) {
+                    // Shift+Enter / Option+Enter / Cmd+Enter 手动插入换行
+                    event.preventDefault();
+                    const start = textarea.selectionStart;
+                    const end = textarea.selectionEnd;
+                    const value = textarea.value;
+                    textarea.value = value.substring(0, start) + '\n' + value.substring(end);
+                    textarea.selectionStart = textarea.selectionEnd = start + 1;
+                } else {
+                    // 普通 Enter 保存
+                    event.preventDefault();
+                    textarea.blur();
+                }
+            }
+        });
+    }
+
+    // --- 4. API 数据持久化 ---
+
+    // 显示加载状态
+    function showLoading(show) {
+        const container = document.querySelector('.container');
+        if (show) {
+            if (!document.getElementById('loading-overlay')) {
+                const overlay = document.createElement('div');
+                overlay.id = 'loading-overlay';
+                overlay.className = 'loading-overlay';
+                overlay.innerHTML = `
+                    <div style="text-align:center;">
+                        <div class="loading-spinner"></div>
+                        <div style="margin-top:20px;color:var(--accent-primary);font-weight:700;font-size:1.1rem;font-family:var(--font-body);">加载中...</div>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+            }
+        } else {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) overlay.remove();
+        }
+    }
+
+    // 显示错误提示
+    function showError(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'notification error';
+        errorDiv.innerHTML = `<strong>❌ 错误:</strong> ${message}`;
+        document.body.appendChild(errorDiv);
+        setTimeout(() => errorDiv.remove(), 5000);
+    }
+
+    // 显示成功提示
+    function showSuccess(message) {
+        const successDiv = document.createElement('div');
+        successDiv.className = 'notification success';
+        successDiv.innerHTML = `<strong>✓</strong> ${message}`;
+        document.body.appendChild(successDiv);
+        setTimeout(() => successDiv.remove(), 3000);
+    }
+
+    // 从 API 加载数据
+    async function loadDataFromAPI(silent = false) {
+        try {
+            if (!silent) showLoading(true);
+            const response = await fetch(`${API_BASE_URL}/schedule`);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data && data.length > 0) {
+                // 比较数据是否有变化（静默刷新时）
+                const hasChanges = !scheduleData || scheduleData.length === 0 ||
+                    JSON.stringify(scheduleData) !== JSON.stringify(data);
+
+                scheduleData = data;
+
+                if (!silent) {
+                    console.log(`✅ 从服务器加载了 ${data.length} 条排班数据`);
+                }
+
+                if (!silent) showLoading(false);
+                return hasChanges; // 返回是否有变化
+            } else {
+                console.warn('⚠️ 服务器返回空数据，使用默认排班');
+                if (!silent) showLoading(false);
+                return false;
+            }
+        } catch (error) {
+            if (!silent) {
+                showLoading(false);
+                console.error('❌ 加载数据失败:', error);
+                console.error('错误类型:', error.name);
+                console.error('错误消息:', error.message);
+                console.error('正在尝试连接:', `${API_BASE_URL}/schedule`);
+                showError(`无法连接到服务器，使用本地数据。错误: ${error.message}`);
+            }
+            return false;
+        }
+    }
+
+    // 更新单条排班数据到 API
+    async function updateScheduleItem(index) {
+        const item = scheduleData[index];
+        if (!item.id) {
+            console.error('数据没有 ID，无法更新');
+            return false;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/schedule/${item.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(item)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const updated = await response.json();
+            scheduleData[index] = updated;
+            console.log(`✅ 已同步到服务器: 第${item.week}周`);
+            return true;
+        } catch (error) {
+            console.error('❌ 更新失败:', error);
+            showError('保存失败，请稍后重试');
+            return false;
+        }
+    }
+
+    // 自动刷新数据（实时协作）
+    let refreshInterval;
+    function startAutoRefresh(intervalMs = 10000) {
+        // 每10秒静默检查数据更新
+        refreshInterval = setInterval(async () => {
+            const hasChanges = await loadDataFromAPI(true); // 静默模式
+            if (hasChanges) {
+                // 不重新渲染整个页面，避免闪烁
+                // 只更新统计数据（这个更新很平滑，不会引起闪烁）
+                renderStats();
+                console.log('🔄 检测到数据变化，已在后台更新数据');
+                // 注意：表格内容不会自动刷新，避免打断用户操作
+                // 用户的手动操作（编辑、勾选）会基于最新数据进行
+            }
+        }, intervalMs);
+    }
+
+    function stopAutoRefresh() {
+        if (refreshInterval) {
+            clearInterval(refreshInterval);
+        }
+    }
+
+    // 自动勾选已过期的日期
+    async function autoCheckPastDates() {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // 只比较日期部分
+
+        const updates = []; // 记录需要更新的项目
+
+        scheduleData.forEach((item, index) => {
+            if (item.isHoliday) return;
+
+            const itemDate = new Date(item.date);
+            itemDate.setHours(0, 0, 0, 0);
+
+            // 如果日期已过，检查是否需要自动勾选
+            if (itemDate < today) {
+                let needsUpdate = false;
+
+                // 只勾选未完成的任务
+                if (item.T1 && !item.T1_done) {
+                    item.T1_done = true;
+                    needsUpdate = true;
+                }
+                if (item.T2_1 && !item.T2_1_done) {
+                    item.T2_1_done = true;
+                    needsUpdate = true;
+                }
+                if (item.T2_2 && !item.T2_2_done) {
+                    item.T2_2_done = true;
+                    needsUpdate = true;
+                }
+                if (item.T3 && !item.T3_done) {
+                    item.T3_done = true;
+                    needsUpdate = true;
+                }
+
+                // 如果有任务被自动勾选，记录该项目
+                if (needsUpdate) {
+                    updates.push(index);
+                }
+            }
+        });
+
+        // 批量同步到数据库
+        if (updates.length > 0) {
+            console.log(`🔄 检测到 ${updates.length} 个过期任务，正在自动勾选并同步到服务器...`);
+
+            for (const index of updates) {
+                await updateScheduleItem(index);
+            }
+
+            console.log(`✅ 已自动勾选并同步 ${updates.length} 个过期任务`);
+        }
+    }
+
+    // --- 5. 留言板功能 ---
+
+    // 留言板数据
+    let messageBoardData = {
+        feedbacks: [], // 反馈列表：[{id, date, category, description, completed}]
+        notice: ''
+    };
+
+    // 问题种类选项
+    const categoryOptions = ['服务优化', '功能建议', 'Bug反馈', '使用问题', '其他'];
+
+    // 更新反馈统计
+    function updateFeedbackStats() {
+        const feedbacks = messageBoardData.feedbacks || [];
+        const total = feedbacks.length;
+        const completed = feedbacks.filter(f => f.completed).length;
+        const pending = total - completed;
+
+        document.getElementById('feedbackTotal').textContent = total;
+        document.getElementById('feedbackCompleted').textContent = completed;
+        document.getElementById('feedbackPending').textContent = pending;
+    }
+
+    // 渲染反馈表格
+    function renderFeedbackTable() {
+        const feedbackBody = document.getElementById('feedbackBody');
+
+        // 更新统计
+        updateFeedbackStats();
+
+        if (!messageBoardData.feedbacks || messageBoardData.feedbacks.length === 0) {
+            feedbackBody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="feedback-empty">暂无反馈，点击下方按钮添加</td>
+                </tr>
+            `;
+            return;
+        }
+
+        feedbackBody.innerHTML = messageBoardData.feedbacks.map((item, index) => `
+            <tr data-index="${index}">
+                <td class="seq-num">${index + 1}</td>
+                <td>
+                    <div class="editable-cell" data-field="date" data-index="${index}">
+                        ${item.date || '点击设置'}
+                    </div>
+                </td>
+                <td>
+                    <div class="editable-cell" data-field="category" data-index="${index}">
+                        <span class="category-tag ${item.category || ''}">${item.category || '点击选择'}</span>
+                    </div>
+                </td>
+                <td>
+                    <div class="editable-cell" data-field="description" data-index="${index}">
+                        ${item.description || '点击输入描述'}
+                    </div>
+                </td>
+                <td>
+                    <span class="status-badge ${item.completed ? 'completed' : 'pending'}"
+                          data-index="${index}"
+                          onclick="toggleFeedbackStatus(${index})">
+                        ${item.completed ? '✓ 已完成' : '○ 待处理'}
+                    </span>
+                </td>
+                <td>
+                    <button class="delete-feedback-btn" onclick="deleteFeedback(${index})" title="删除">×</button>
+                </td>
+            </tr>
+        `).join('');
+
+        // 绑定编辑事件
+        addFeedbackEditListeners();
+    }
+
+    // 绑定反馈表格编辑事件
+    function addFeedbackEditListeners() {
+        document.querySelectorAll('.feedback-table .editable-cell').forEach(cell => {
+            cell.addEventListener('click', handleFeedbackCellClick);
+        });
+    }
+
+    // 处理单元格点击
+    function handleFeedbackCellClick(e) {
+        const cell = e.currentTarget;
+        if (cell.querySelector('input') || cell.querySelector('select')) return;
+
+        const field = cell.getAttribute('data-field');
+        const index = parseInt(cell.getAttribute('data-index'));
+        const item = messageBoardData.feedbacks[index];
+
+        if (field === 'category') {
+            // 下拉选择
+            const currentValue = item.category || '';
+            cell.innerHTML = `
+                <select>
+                    <option value="">选择种类</option>
+                    ${categoryOptions.map(opt =>
+                        `<option value="${opt}" ${opt === currentValue ? 'selected' : ''}>${opt}</option>`
+                    ).join('')}
+                </select>
+            `;
+            const select = cell.querySelector('select');
+            select.focus();
+
+            const save = async () => {
+                const newValue = select.value;
+                messageBoardData.feedbacks[index].category = newValue;
+                cell.innerHTML = `<span class="category-tag ${newValue}">${newValue || '点击选择'}</span>`;
+                await updateMessageBoard();
+            };
+
+            select.addEventListener('blur', save);
+            select.addEventListener('change', () => select.blur());
+        } else if (field === 'date') {
+            // 日期输入
+            const currentValue = item.date || '';
+            cell.innerHTML = `<input type="date" value="${currentValue}">`;
+            const input = cell.querySelector('input');
+            input.focus();
+
+            const save = async () => {
+                const newValue = input.value;
+                messageBoardData.feedbacks[index].date = newValue;
+                cell.innerHTML = newValue || '点击设置';
+                await updateMessageBoard();
+            };
+
+            input.addEventListener('blur', save);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') input.blur();
+            });
+        } else if (field === 'description') {
+            // 描述输入
+            const currentValue = item.description || '';
+            cell.innerHTML = `<input type="text" value="${currentValue}" placeholder="输入描述">`;
+            const input = cell.querySelector('input');
+            input.focus();
+            input.select();
+
+            const save = async () => {
+                const newValue = input.value.trim();
+                messageBoardData.feedbacks[index].description = newValue;
+                cell.innerHTML = newValue || '点击输入描述';
+                await updateMessageBoard();
+            };
+
+            input.addEventListener('blur', save);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') input.blur();
+            });
+        }
+    }
+
+    // 切换完成状态
+    async function toggleFeedbackStatus(index) {
+        messageBoardData.feedbacks[index].completed = !messageBoardData.feedbacks[index].completed;
+        renderFeedbackTable();
+        await updateMessageBoard();
+    }
+
+    // 添加反馈
+    async function addFeedback() {
+        const today = new Date().toISOString().split('T')[0];
+        const newFeedback = {
+            id: Date.now(),
+            date: today,
+            category: '',
+            description: '',
+            completed: false
+        };
+
+        if (!messageBoardData.feedbacks) {
+            messageBoardData.feedbacks = [];
+        }
+        messageBoardData.feedbacks.push(newFeedback);
+        renderFeedbackTable();
+        await updateMessageBoard();
+    }
+
+    // 删除反馈
+    async function deleteFeedback(index) {
+        if (confirm('确定要删除这条反馈吗？')) {
+            messageBoardData.feedbacks.splice(index, 1);
+            renderFeedbackTable();
+            await updateMessageBoard();
+        }
+    }
+
+    // 渲染留言板内容
+    function renderMessageBoard() {
+        // 渲染反馈表格
+        renderFeedbackTable();
+
+        // 渲染公告
+        const noticeContent = document.getElementById('noticeContent');
+        if (messageBoardData.notice) {
+            noticeContent.textContent = messageBoardData.notice;
+            noticeContent.classList.remove('empty');
+        } else {
+            noticeContent.textContent = '点击此处发布公告...';
+            noticeContent.classList.add('empty');
+        }
+    }
+
+    // 绑定留言板编辑事件
+    function addMessageBoardListeners() {
+        const noticeContent = document.getElementById('noticeContent');
+        noticeContent.addEventListener('click', handleNoticeClick);
+
+        // 添加反馈按钮
+        document.getElementById('addFeedbackBtn').addEventListener('click', addFeedback);
+    }
+
+    // 处理公告点击事件
+    function handleNoticeClick(e) {
+        const element = e.currentTarget;
+
+        if (element.querySelector('textarea')) return;
+
+        const currentText = element.classList.contains('empty') ? '' : element.textContent.trim();
+
+        element.innerHTML = `<textarea placeholder="Shift+Enter换行，Enter保存">${currentText}</textarea>`;
+        element.classList.add('editing');
+
+        const textarea = element.querySelector('textarea');
+        textarea.focus();
+        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+
+        const save = async () => {
+            const newText = textarea.value.trim();
+            messageBoardData.notice = newText;
+
+            if (newText) {
+                element.textContent = newText;
+                element.classList.remove('empty');
+            } else {
+                element.textContent = '点击此处发布公告...';
+                element.classList.add('empty');
+            }
+
+            element.classList.remove('editing');
+            await updateMessageBoard();
+        };
+
+        textarea.addEventListener('blur', save);
+
+        textarea.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                if (event.shiftKey || event.altKey || event.metaKey) {
+                    event.preventDefault();
+                    const start = textarea.selectionStart;
+                    const end = textarea.selectionEnd;
+                    const value = textarea.value;
+                    textarea.value = value.substring(0, start) + '\n' + value.substring(end);
+                    textarea.selectionStart = textarea.selectionEnd = start + 1;
+                } else {
+                    event.preventDefault();
+                    textarea.blur();
+                }
+            }
+        });
+    }
+
+    // 从API加载留言板数据
+    async function loadMessageBoard() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/messageBoard`);
+
+            if (!response.ok) {
+                // 如果接口不存在，返回默认数据
+                if (response.status === 404) {
+                    console.log('留言板接口不存在，使用默认数据');
+                    return;
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // 兼容旧数据格式：如果有 message 字段但没有 feedbacks，则转换
+            if (data) {
+                if (data.feedbacks) {
+                    // 新格式
+                    messageBoardData = data;
+                } else {
+                    // 旧格式，进行转换
+                    messageBoardData = {
+                        feedbacks: [],
+                        notice: data.notice || ''
+                    };
+                    // 如果有旧的 message 内容，可以尝试解析或忽略
+                    console.log('检测到旧数据格式，已转换为新格式');
+                }
+            }
+            renderMessageBoard();
+        } catch (error) {
+            console.log('留言板数据加载失败，使用默认数据:', error.message);
+        }
+    }
+
+    // 更新留言板数据到API
+    async function updateMessageBoard() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/messageBoard`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(messageBoardData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            console.log('✅ 留言板已同步到服务器');
+            return true;
+        } catch (error) {
+            console.error('❌ 留言板更新失败:', error);
+            showError('留言板保存失败，请稍后重试');
+            return false;
+        }
+    }
+
+    // 页面加载时执行
+    document.addEventListener('DOMContentLoaded', async () => {
+        // 首先尝试从API加载数据
+        const success = await loadDataFromAPI();
+
+        // 加载留言板数据
+        await loadMessageBoard();
+        addMessageBoardListeners();
+
+        if (success) {
+            // API加载成功，自动勾选过期日期
+            await autoCheckPastDates();
+            renderSchedule();
+
+            // 启动自动刷新（每10秒）
+            startAutoRefresh(10000);
+
+            // 页面关闭时停止自动刷新
+            window.addEventListener('beforeunload', stopAutoRefresh);
+        } else {
+            // API加载失败，使用默认数据
+            await autoCheckPastDates();
+            renderSchedule();
+        }
+    });
+
+</script>
+
+</body>
+</html>

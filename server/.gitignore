@@ -1,0 +1,13 @@
+# 上传的文件
+uploads/*
+!uploads/.gitkeep
+
+# Node modules
+node_modules/
+
+# 数据库文件备份
+db.json.bak
+*.bak
+
+# 日志文件
+*.log
