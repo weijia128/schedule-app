@@ -2580,13 +2580,11 @@
     function linkifyText(text) {
         if (!text) return '';
 
-        // URL正则表达式，匹配http(s)://开头的链接
-        // 匹配到空白、换行或常见的结尾标点符号（不包括标点作为链接的一部分）
-        const urlRegex = /(https?:\/\/[^\s<>"]+)/gi;
+        let result = text;
 
-        // 替换URL为可点击的链接
-        return text.replace(urlRegex, (match) => {
-            // 去除URL末尾的标点符号（中英文括号、句号、逗号等）
+        // 第一步：匹配带协议的URL (http:// 或 https://)
+        const urlWithProtocolRegex = /(https?:\/\/[^\s<>"]+)/gi;
+        result = result.replace(urlWithProtocolRegex, (match) => {
             let url = match;
             const trailingPunctuation = /[)）,.;:!?。，、；：！？》」】]+$/;
             const punctMatch = url.match(trailingPunctuation);
@@ -2599,6 +2597,35 @@
 
             return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="inline-link" onclick="event.stopPropagation();">${url}</a>${trailing}`;
         });
+
+        // 第二步：匹配不带协议的常见域名链接（如 github.com, gist.github.com 等）
+        // 匹配模式：域名 + 路径，前面没有 http:// 或 https://，且不在已有的链接标签内
+        const domainRegex = /(?:^|\s|<br>)(github\.com|gist\.github\.com|gitlab\.com|bitbucket\.org)(\/[^\s<>"]*)/gi;
+        result = result.replace(domainRegex, (match, domain, path, offset) => {
+            // 检查是否在已有的HTML标签内（避免重复替换）
+            const beforeMatch = result.substring(Math.max(0, offset - 10), offset);
+            if (beforeMatch.includes('<a href') || beforeMatch.includes('http')) {
+                return match;
+            }
+
+            let url = 'https://' + domain + path;
+            const trailingPunctuation = /[)）,.;:!?。，、；：！？》」】]+$/;
+            const punctMatch = path.match(trailingPunctuation);
+            let trailing = '';
+            let cleanPath = path;
+
+            if (punctMatch) {
+                trailing = punctMatch[0];
+                cleanPath = path.slice(0, -trailing.length);
+                url = 'https://' + domain + cleanPath;
+            }
+
+            // 保留前面的空白或<br>
+            const leadingSpace = match.match(/^(\s|<br>)/)?.[1] || '';
+            return `${leadingSpace}<a href="${url}" target="_blank" rel="noopener noreferrer" class="inline-link" onclick="event.stopPropagation();">${domain}${cleanPath}</a>${trailing}`;
+        });
+
+        return result;
     }
 
     // 统计各成员已完成的分享次数（根据勾选状态）
