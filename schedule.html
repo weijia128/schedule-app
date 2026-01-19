@@ -318,7 +318,7 @@
             border: 2px solid var(--border-subtle);
             border-radius: var(--radius-md);
             overflow: hidden;
-            height: 300px;
+            height: 400px;
             display: flex;
             flex-direction: column;
         }
@@ -950,7 +950,17 @@
 
         .library-controls {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
             gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .library-controls .control-left,
+        .library-controls .control-right {
+            display: flex;
+            gap: var(--space-md);
+            align-items: center;
             flex-wrap: wrap;
         }
 
@@ -1205,6 +1215,141 @@
             to { transform: rotate(360deg); }
         }
 
+        /* 复选框样式 */
+        .document-checkbox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+        }
+
+        .file-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--accent-primary);
+        }
+
+        .file-checkbox:hover {
+            transform: scale(1.1);
+        }
+
+        /* 全选标签样式 */
+        .select-all-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            user-select: none;
+        }
+
+        .select-all-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--accent-primary);
+        }
+
+        .select-all-label:hover {
+            color: var(--text-primary);
+        }
+
+        /* 批量下载按钮样式 */
+        .batch-download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-sm) var(--space-lg);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: var(--text-inverse);
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+        }
+
+        .batch-download-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+        }
+
+        .batch-download-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .batch-download-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* 文档项样式调整（添加复选框列） */
+        .document-item {
+            display: grid;
+            grid-template-columns: 40px 40px 1fr auto;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-sm);
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 分页控件样式 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space-xs);
+            margin-top: var(--space-lg);
+            padding: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .pagination-btn {
+            padding: var(--space-xs) var(--space-md);
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: var(--text-inverse);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .pagination-btn.active {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-color: var(--accent-primary);
+            color: var(--text-inverse);
+            font-weight: 600;
+        }
+
+        .pagination-info {
+            margin-left: var(--space-md);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
         .empty-state {
             text-align: center;
             padding: var(--space-2xl);
@@ -1237,18 +1382,24 @@
                 width: 100%;
             }
 
+            .library-controls .control-left,
+            .library-controls .control-right {
+                width: 100%;
+            }
+
             .file-search-input {
                 flex: 1;
             }
 
             .document-item {
-                grid-template-columns: 40px 1fr;
+                grid-template-columns: 40px 40px 1fr;
                 gap: var(--space-sm);
             }
 
             .document-actions {
-                grid-column: 2;
+                grid-column: 3;
                 justify-content: flex-start;
+                width: 100%;
             }
         }
 
@@ -2285,16 +2436,27 @@
                 分享文档库
             </h2>
             <div class="library-controls">
-                <input type="text" id="fileSearchInput" class="file-search-input" placeholder="搜索文件名...">
-                <select id="fileSortSelect" class="file-sort-select">
-                    <option value="date-desc">上传时间 (最新)</option>
-                    <option value="date-asc">上传时间 (最早)</option>
-                    <option value="name-asc">文件名 (A-Z)</option>
-                    <option value="name-desc">文件名 (Z-A)</option>
-                </select>
-                <button id="refreshLibraryBtn" class="refresh-btn" title="刷新文档库">
-                    🔄 刷新
-                </button>
+                <div class="control-left">
+                    <input type="text" id="fileSearchInput" class="file-search-input" placeholder="搜索文件名...">
+                    <select id="fileSortSelect" class="file-sort-select">
+                        <option value="date-desc">上传时间 (最新)</option>
+                        <option value="date-asc">上传时间 (最早)</option>
+                        <option value="name-asc">文件名 (A-Z)</option>
+                        <option value="name-desc">文件名 (Z-A)</option>
+                    </select>
+                    <button id="refreshLibraryBtn" class="refresh-btn" title="刷新文档库">
+                        🔄 刷新
+                    </button>
+                </div>
+                <div class="control-right">
+                    <label class="select-all-label">
+                        <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">
+                        <span>全选</span>
+                    </label>
+                    <button id="batchDownloadBtn" class="batch-download-btn" onclick="batchDownload()" disabled>
+                        📦 批量下载 (0)
+                    </button>
+                </div>
             </div>
         </div>
         <div class="library-stats">
@@ -2631,7 +2793,7 @@
 
         addEditableListeners();
         addCheckboxListeners();
-        addFileListeners();
+        // addFileListeners() 现在只在初始化时调用一次，使用事件委托
         renderStats(); // 更新统计
     }
 
@@ -2722,20 +2884,52 @@
         return truncatedName + '.' + extension;
     }
 
-    // 绑定文件相关事件监听器
+    // 绑定文件相关事件监听器（使用事件委托避免重复绑定）
     function addFileListeners() {
-        // 上传按钮点击事件
-        document.querySelectorAll('.file-upload-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
+        // 使用一个标志来确保事件监听器只被添加一次
+        if (window.fileListenersAdded) {
+            return;
+        }
+
+        // 为整个文档添加事件监听器（事件委托）
+        document.addEventListener('click', (e) => {
+            // 处理上传按钮点击
+            if (e.target.classList.contains('file-upload-btn') || e.target.closest('.file-upload-btn')) {
                 e.preventDefault();
-                const index = e.target.getAttribute('data-index');
-                document.getElementById(`file-input-${index}`).click();
-            });
+                const btn = e.target.classList.contains('file-upload-btn') ? e.target : e.target.closest('.file-upload-btn');
+                const index = btn.getAttribute('data-index');
+                const fileInput = document.getElementById(`file-input-${index}`);
+                if (fileInput) {
+                    fileInput.click();
+                }
+            }
+
+            // 处理删除按钮点击
+            if (e.target.classList.contains('file-delete')) {
+                e.preventDefault();
+                const index = parseInt(e.target.getAttribute('data-index'));
+                const fileIndex = parseInt(e.target.getAttribute('data-file-index'));
+
+                if (confirm('确定要删除这个文件吗？')) {
+                    handleFileDelete(index, fileIndex);
+                }
+            }
+
+            // 处理预览按钮点击
+            if (e.target.classList.contains('file-preview') || e.target.closest('.file-preview')) {
+                e.preventDefault();
+                const link = e.target.classList.contains('file-preview') ? e.target : e.target.closest('.file-preview');
+                const index = parseInt(link.getAttribute('data-index'));
+                const fileIndex = parseInt(link.getAttribute('data-file-index'));
+                openFilePreview(index, fileIndex).catch(error => {
+                    console.error('预览错误:', error);
+                });
+            }
         });
 
         // 文件选择事件
-        document.querySelectorAll('.file-input').forEach(input => {
-            input.addEventListener('change', async (e) => {
+        document.addEventListener('change', async (e) => {
+            if (e.target.classList.contains('file-input')) {
                 const index = parseInt(e.target.getAttribute('data-index'));
                 const files = Array.from(e.target.files);
 
@@ -2743,35 +2937,11 @@
                     await handleFileUpload(index, files);
                     e.target.value = ''; // 清空input，允许重复上传同一文件
                 }
-            });
+            }
         });
 
-        // 文件预览事件
-        document.querySelectorAll('.file-preview').forEach(link => {
-            link.addEventListener('click', async (e) => {
-                e.preventDefault();
-                const index = parseInt(e.target.getAttribute('data-index'));
-                const fileIndex = parseInt(e.target.getAttribute('data-file-index'));
-                try {
-                    await openFilePreview(index, fileIndex);
-                } catch (error) {
-                    console.error('预览错误:', error);
-                }
-            });
-        });
-
-        // 文件删除事件
-        document.querySelectorAll('.file-delete').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                e.preventDefault();
-                const index = parseInt(e.target.getAttribute('data-index'));
-                const fileIndex = parseInt(e.target.getAttribute('data-file-index'));
-
-                if (confirm('确定要删除这个文件吗？')) {
-                    await handleFileDelete(index, fileIndex);
-                }
-            });
-        });
+        // 标记事件监听器已添加
+        window.fileListenersAdded = true;
     }
 
     // 处理文件上传
@@ -2790,7 +2960,6 @@
             const filesCell = document.querySelector(`.files-cell[data-index="${index}"]`);
             if (filesCell) {
                 filesCell.innerHTML = renderFilesCell(item.files, index, uploadingFiles);
-                addFileListeners(); // 重新绑定事件监听器
             }
 
             const formData = new FormData();
@@ -2875,7 +3044,6 @@
             // 重新渲染文件列表（移除上传中的文件，显示已上传的文件）
             if (filesCell) {
                 filesCell.innerHTML = renderFilesCell(item.files, index);
-                addFileListeners();
             }
 
             showSuccess(`成功上传 ${files.length} 个文件`);
@@ -2887,7 +3055,6 @@
             const filesCell = document.querySelector(`.files-cell[data-index="${index}"]`);
             if (filesCell) {
                 filesCell.innerHTML = renderFilesCell(item.files, index);
-                addFileListeners();
             }
         }
     }
@@ -3429,36 +3596,50 @@
             return;
         }
 
-        feedbackBody.innerHTML = messageBoardData.feedbacks.map((item, index) => `
-            <tr data-index="${index}">
+        // 排序：未完成的问题在前，已完成的在后（按添加顺序）
+        const sortedFeedbacks = [...messageBoardData.feedbacks].sort((a, b) => {
+            // 如果完成状态不同，未完成的排在前面
+            if (a.completed !== b.completed) {
+                return a.completed ? 1 : -1;
+            }
+            // 相同状态下，按id倒序（最新的在前）
+            return b.id - a.id;
+        });
+
+        feedbackBody.innerHTML = sortedFeedbacks.map((item, index) => {
+            // 找到该项目在原始数组中的索引
+            const originalIndex = messageBoardData.feedbacks.findIndex(f => f.id === item.id);
+            return `
+            <tr data-index="${originalIndex}">
                 <td class="seq-num">${index + 1}</td>
                 <td>
-                    <div class="editable-cell" data-field="date" data-index="${index}">
+                    <div class="editable-cell" data-field="date" data-index="${originalIndex}">
                         ${item.date || '点击设置'}
                     </div>
                 </td>
                 <td>
-                    <div class="editable-cell" data-field="category" data-index="${index}">
+                    <div class="editable-cell" data-field="category" data-index="${originalIndex}">
                         <span class="category-tag ${item.category || ''}">${item.category || '点击选择'}</span>
                     </div>
                 </td>
                 <td>
-                    <div class="editable-cell" data-field="description" data-index="${index}">
+                    <div class="editable-cell" data-field="description" data-index="${originalIndex}">
                         ${item.description || '点击输入描述'}
                     </div>
                 </td>
                 <td>
                     <span class="status-badge ${item.completed ? 'completed' : 'pending'}"
-                          data-index="${index}"
-                          onclick="toggleFeedbackStatus(${index})">
+                          data-index="${originalIndex}"
+                          onclick="toggleFeedbackStatus(${originalIndex})">
                         ${item.completed ? '✓ 已完成' : '○ 待处理'}
                     </span>
                 </td>
                 <td>
-                    <button class="delete-feedback-btn" onclick="deleteFeedback(${index})" title="删除">×</button>
+                    <button class="delete-feedback-btn" onclick="deleteFeedback(${originalIndex})" title="删除">×</button>
                 </td>
             </tr>
-        `).join('');
+            `;
+        }).join('');
 
         // 绑定编辑事件
         addFeedbackEditListeners();
@@ -3564,7 +3745,8 @@
         if (!messageBoardData.feedbacks) {
             messageBoardData.feedbacks = [];
         }
-        messageBoardData.feedbacks.push(newFeedback);
+        // 使用unshift让最新添加的问题显示在顶部
+        messageBoardData.feedbacks.unshift(newFeedback);
         renderFeedbackTable();
         await updateMessageBoard();
     }
@@ -3693,6 +3875,21 @@
     // ==================== 文档库功能 ====================
     let allFilesData = [];
     let filteredFilesData = [];
+    let currentPage = 1;
+    const filesPerPage = 10;
+    let selectedFiles = new Set(); // 存储选中的文件索引
+
+    // 计算分页数据
+    function getPaginatedFiles() {
+        const startIndex = (currentPage - 1) * filesPerPage;
+        const endIndex = startIndex + filesPerPage;
+        return filteredFilesData.slice(startIndex, endIndex);
+    }
+
+    // 获取总页数
+    function getTotalPages() {
+        return Math.ceil(filteredFilesData.length / filesPerPage);
+    }
 
     // 加载文档库数据
     async function loadDocumentLibrary() {
@@ -3706,6 +3903,9 @@
             const data = await response.json();
             allFilesData = data.files || [];
             filteredFilesData = [...allFilesData];
+            // 清空选中状态
+            selectedFiles.clear();
+            currentPage = 1;
             renderDocumentLibrary();
         } catch (error) {
             console.error('文档库数据加载失败:', error);
@@ -3728,13 +3928,84 @@
         const fileList = document.createElement('div');
         fileList.className = 'document-list';
 
-        filteredFilesData.forEach((file, index) => {
-            const fileItem = createFileItem(file, index);
+        // 获取分页数据
+        const paginatedFiles = getPaginatedFiles();
+        const startIndex = (currentPage - 1) * filesPerPage;
+
+        paginatedFiles.forEach((file, index) => {
+            // 使用全局索引作为选中标识
+            const globalIndex = startIndex + index;
+            const fileItem = createFileItem(file, globalIndex);
             fileList.appendChild(fileItem);
         });
 
         contentDiv.innerHTML = '';
         contentDiv.appendChild(fileList);
+
+        // 渲染分页控件
+        renderPagination();
+
+        // 更新批量下载按钮状态
+        updateBatchDownloadButton();
+    }
+
+    // 渲染分页控件
+    function renderPagination() {
+        const totalPages = getTotalPages();
+        if (totalPages <= 1) return;
+
+        const paginationDiv = document.createElement('div');
+        paginationDiv.className = 'pagination';
+
+        // 上一页按钮
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'pagination-btn';
+        prevBtn.textContent = '上一页';
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.onclick = () => goToPage(currentPage - 1);
+        paginationDiv.appendChild(prevBtn);
+
+        // 页码按钮
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = `pagination-btn ${i === currentPage ? 'active' : ''}`;
+            pageBtn.textContent = i;
+            pageBtn.onclick = () => goToPage(i);
+            paginationDiv.appendChild(pageBtn);
+        }
+
+        // 下一页按钮
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'pagination-btn';
+        nextBtn.textContent = '下一页';
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.onclick = () => goToPage(currentPage + 1);
+        paginationDiv.appendChild(nextBtn);
+
+        // 添加分页信息
+        const pageInfo = document.createElement('span');
+        pageInfo.className = 'pagination-info';
+        pageInfo.textContent = `第 ${currentPage} / ${totalPages} 页，共 ${filteredFilesData.length} 个文件`;
+        paginationDiv.appendChild(pageInfo);
+
+        const contentDiv = document.getElementById('documentLibraryContent');
+        contentDiv.appendChild(paginationDiv);
+    }
+
+    // 跳转到指定页
+    function goToPage(page) {
+        const totalPages = getTotalPages();
+        if (page < 1 || page > totalPages) return;
+        currentPage = page;
+        renderDocumentLibrary();
     }
 
     // 创建文件项元素
@@ -3752,14 +4023,20 @@
         // 格式化上传时间
         const uploadDate = file.uploadDate ? new Date(file.uploadDate).toLocaleString('zh-CN') : '未知时间';
 
+        // 检查是否被选中
+        const isSelected = selectedFiles.has(index);
+
         // 创建预览按钮（替代原来的下载按钮）
         const previewBtn = document.createElement('button');
         previewBtn.className = 'download-btn';
-        previewBtn.innerHTML = '👁️ 预览';
+        previewBtn.innerHTML = '预览';
         previewBtn.title = '打开预览';
         previewBtn.onclick = () => openLibraryFilePreview(file);
 
         item.innerHTML = `
+            <div class="document-checkbox">
+                <input type="checkbox" class="file-checkbox" ${isSelected ? 'checked' : ''} data-index="${index}">
+            </div>
             <div class="document-icon">${icon}</div>
             <div class="document-info">
                 <div class="document-name">${file.name || file.filename}</div>
@@ -3783,6 +4060,118 @@
         item.appendChild(downloadLink);
 
         return item;
+    }
+
+    // 切换文件选中状态
+    function toggleFileSelection(index, selected) {
+        if (selected) {
+            selectedFiles.add(index);
+        } else {
+            selectedFiles.delete(index);
+        }
+        updateBatchDownloadButton();
+    }
+
+    // 全选/取消全选
+    function toggleSelectAll() {
+        const paginatedFiles = getPaginatedFiles();
+        const startIndex = (currentPage - 1) * filesPerPage;
+
+        // 检查当前页是否全部选中
+        const allSelected = paginatedFiles.every((_, i) => selectedFiles.has(startIndex + i));
+
+        if (allSelected) {
+            // 取消全选
+            paginatedFiles.forEach((_, i) => {
+                selectedFiles.delete(startIndex + i);
+            });
+        } else {
+            // 全选
+            paginatedFiles.forEach((_, i) => {
+                selectedFiles.add(startIndex + i);
+            });
+        }
+        renderDocumentLibrary();
+    }
+
+    // 获取选中的文件
+    function getSelectedFiles() {
+        const selected = [];
+        selectedFiles.forEach(index => {
+            if (index < filteredFilesData.length) {
+                selected.push(filteredFilesData[index]);
+            }
+        });
+        return selected;
+    }
+
+    // 更新批量下载按钮状态
+    function updateBatchDownloadButton() {
+        const batchBtn = document.getElementById('batchDownloadBtn');
+        const count = selectedFiles.size;
+        if (batchBtn) {
+            batchBtn.textContent = `📦 批量下载 (${count})`;
+            batchBtn.disabled = count === 0;
+        }
+    }
+
+    // 批量下载选中的文件
+    async function batchDownload() {
+        const selected = getSelectedFiles();
+        if (selected.length === 0) {
+            showError('请先选择要下载的文件');
+            return;
+        }
+
+        showLoading(true, '正在准备下载...');
+
+        try {
+            if (selected.length === 1) {
+                // 单个文件直接下载
+                const file = selected[0];
+                const link = document.createElement('a');
+                link.href = `${API_BASE_URL}${file.downloadUrl}`;
+                link.download = file.name || file.filename;
+                link.click();
+                showSuccess('开始下载');
+            } else {
+                // 多个文件，逐个下载（模拟批量下载）
+                let successCount = 0;
+                let failCount = 0;
+
+                for (let i = 0; i < selected.length; i++) {
+                    const file = selected[i];
+                    try {
+                        // 创建下载链接
+                        const link = document.createElement('a');
+                        link.href = `${API_BASE_URL}${file.downloadUrl}`;
+                        link.download = file.name || file.filename;
+
+                        // 触发下载
+                        link.click();
+                        successCount++;
+
+                        // 添加小延迟避免浏览器拦截
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    } catch (error) {
+                        console.error(`下载失败: ${file.name}`, error);
+                        failCount++;
+                    }
+                }
+
+                if (successCount > 0) {
+                    showSuccess(`已触发 ${successCount} 个文件的下载`);
+                }
+                if (failCount > 0) {
+                    showError(`${failCount} 个文件下载失败`);
+                }
+            }
+        } catch (error) {
+            console.error('批量下载失败:', error);
+            showError('批量下载失败: ' + error.message);
+        } finally {
+            showLoading(false);
+        }
     }
 
     // 从文档库打开文件预览
@@ -3952,6 +4341,8 @@
                 <div class="empty-state-subtext">还没有团队分享任何文档</div>
             </div>
         `;
+        // 更新批量下载按钮状态
+        updateBatchDownloadButton();
     }
 
     // 添加文档库事件监听
@@ -3975,6 +4366,16 @@
         // 刷新功能
         refreshBtn.addEventListener('click', async () => {
             await refreshDocumentLibrary();
+        });
+
+        // 使用事件委托处理复选框change事件
+        const contentDiv = document.getElementById('documentLibraryContent');
+        contentDiv.addEventListener('change', (e) => {
+            if (e.target.classList.contains('file-checkbox')) {
+                const index = parseInt(e.target.getAttribute('data-index'));
+                const selected = e.target.checked;
+                toggleFileSelection(index, selected);
+            }
         });
     }
 
@@ -4035,6 +4436,8 @@
             }
         });
 
+        // 重置到第一页
+        currentPage = 1;
         renderDocumentLibrary();
     }
 
@@ -4074,6 +4477,9 @@
         // 加载文档库
         await loadDocumentLibrary();
         addDocumentLibraryListeners();
+
+        // 绑定文件事件监听器（使用事件委托，只绑定一次）
+        addFileListeners();
 
         if (success) {
             // API加载成功，自动勾选过期日期
