@@ -2354,6 +2354,128 @@
             white-space: pre-wrap;
             word-wrap: break-word;
         }
+
+        .markdown-preview-inline {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: var(--space-lg);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            line-height: 1.7;
+        }
+
+        .markdown-preview-inline > :first-child {
+            margin-top: 0;
+        }
+
+        .markdown-preview-inline > :last-child {
+            margin-bottom: 0;
+        }
+
+        .markdown-preview-inline h1,
+        .markdown-preview-inline h2,
+        .markdown-preview-inline h3,
+        .markdown-preview-inline h4,
+        .markdown-preview-inline h5,
+        .markdown-preview-inline h6 {
+            margin: 1.2em 0 0.6em;
+            font-family: var(--font-display);
+            letter-spacing: -0.01em;
+        }
+
+        .markdown-preview-inline h1 { font-size: 1.6rem; }
+        .markdown-preview-inline h2 { font-size: 1.35rem; }
+        .markdown-preview-inline h3 { font-size: 1.15rem; }
+        .markdown-preview-inline h4 { font-size: 1rem; }
+        .markdown-preview-inline h5,
+        .markdown-preview-inline h6 { font-size: 0.95rem; }
+
+        .markdown-preview-inline p {
+            margin: 0 0 1em;
+        }
+
+        .markdown-preview-inline ul,
+        .markdown-preview-inline ol {
+            margin: 0 0 1em 1.2em;
+            padding: 0;
+        }
+
+        .markdown-preview-inline li {
+            margin: 0.3em 0;
+        }
+
+        .markdown-preview-inline a {
+            color: var(--accent-primary);
+            text-decoration: underline;
+            text-decoration-color: rgba(255, 107, 53, 0.4);
+            text-underline-offset: 3px;
+        }
+
+        .markdown-preview-inline blockquote {
+            margin: 1em 0;
+            padding: 0.6em 1em;
+            border-left: 4px solid var(--accent-primary);
+            background: var(--accent-subtle);
+            color: var(--text-secondary);
+        }
+
+        .markdown-preview-inline code {
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+            background: var(--bg-tertiary);
+            padding: 0.15em 0.35em;
+            border-radius: var(--radius-sm);
+        }
+
+        .markdown-preview-inline pre {
+            margin: 0 0 1.2em;
+            padding: var(--space-md);
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            overflow: auto;
+        }
+
+        .markdown-preview-inline pre code {
+            background: transparent;
+            padding: 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .markdown-preview-inline table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1em 0;
+            font-size: 0.95rem;
+        }
+
+        .markdown-preview-inline th,
+        .markdown-preview-inline td {
+            border: 1px solid var(--border-subtle);
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        .markdown-preview-inline thead th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+        }
+
+        .markdown-preview-inline hr {
+            border: none;
+            border-top: 1px solid var(--border-subtle);
+            margin: 1.5em 0;
+        }
+
+        .markdown-preview-inline img {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+        }
     </style>
 </head>
 <body>
@@ -2486,6 +2608,8 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
 <script>
     // --- API 配置 ---
     // 自动检测环境：
@@ -4273,14 +4397,14 @@
                         <iframe src="${url}" frameborder="0"></iframe>
                     </div>
                 `;
-            } else if (['txt', 'md', 'json', 'js', 'html', 'css', 'csv'].includes(extension)) {
-                // 文本文件
+            } else if (['md', 'markdown'].includes(extension)) {
+                // Markdown files
                 const text = await response.text();
-                previewContent.innerHTML = `
-                    <div class="text-preview-inline">
-                        <pre>${escapeHtml(text)}</pre>
-                    </div>
-                `;
+                previewContent.innerHTML = renderMarkdownPreview(text);
+            } else if (['txt', 'json', 'js', 'html', 'css', 'csv'].includes(extension)) {
+                // Text files
+                const text = await response.text();
+                previewContent.innerHTML = renderTextPreview(text);
             } else {
                 // 其他文件类型，显示文件信息
                 previewContent.innerHTML = `
@@ -4604,14 +4728,14 @@
                         <iframe src="${url}" frameborder="0"></iframe>
                     </div>
                 `;
-            } else if (['txt', 'md', 'json', 'js', 'html', 'css', 'csv'].includes(extension)) {
-                // 文本文件
+            } else if (['md', 'markdown'].includes(extension)) {
+                // Markdown files
                 const text = await response.text();
-                previewContent.innerHTML = `
-                    <div class="text-preview-inline">
-                        <pre>${escapeHtml(text)}</pre>
-                    </div>
-                `;
+                previewContent.innerHTML = renderMarkdownPreview(text);
+            } else if (['txt', 'json', 'js', 'html', 'css', 'csv'].includes(extension)) {
+                // Text files
+                const text = await response.text();
+                previewContent.innerHTML = renderTextPreview(text);
             } else {
                 // 其他文件类型，显示文件信息
                 previewContent.innerHTML = `
@@ -4650,6 +4774,24 @@
         if (currentPreviewFile) {
             await handleFileDownload(currentPreviewFile.index, currentPreviewFile.fileIndex);
         }
+    }
+
+    function renderTextPreview(text) {
+        return `
+            <div class="text-preview-inline">
+                <pre>${escapeHtml(text)}</pre>
+            </div>
+        `;
+    }
+
+    function renderMarkdownPreview(markdownText) {
+        if (!window.marked || typeof window.marked.parse !== 'function' || !window.DOMPurify) {
+            return renderTextPreview(markdownText);
+        }
+
+        const rawHtml = window.marked.parse(markdownText, { gfm: true, breaks: true });
+        const safeHtml = window.DOMPurify.sanitize(rawHtml);
+        return `<div class="markdown-preview-inline">${safeHtml}</div>`;
     }
 
     // HTML转义函数
