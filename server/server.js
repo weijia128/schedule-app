@@ -1,20 +1,319 @@
+const path = require('path');
+const fs = require('fs');
+
+// ── 最优先：从 .env 加载配置（若已设置环境变量则不覆盖）──────────────────────
+(function loadDotEnv() {
+  const envPath = path.join(__dirname, '.env');
+  if (!fs.existsSync(envPath)) return;
+  const lines = fs.readFileSync(envPath, 'utf8').split('\n');
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line || line.startsWith('#')) continue;
+    const eqIdx = line.indexOf('=');
+    if (eqIdx < 0) continue;
+    const key = line.slice(0, eqIdx).trim();
+    // Strip optional surrounding quotes from value
+    const val = line.slice(eqIdx + 1).trim().replace(/^(['"])(.*)\1$/, '$2');
+    if (key && !(key in process.env)) {
+      process.env[key] = val;
+    }
+  }
+  console.log('[env] Loaded .env from', envPath);
+})();
+
 const jsonServer = require('json-server');
 const cors = require('cors');
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
 const express = require('express');
 const server = jsonServer.create();
 const router = jsonServer.router('db.json');
 const middlewares = jsonServer.defaults();
 
+// RAG 模块
+const ragRouter = require('./rag/router');
+const { indexSingleFile, removeFromIndex } = require('./rag/indexer');
+
 const PORT = process.env.PORT || 3000;
+const UPLOAD_SYNC_INTERVAL_MS = Math.max(parseInt(process.env.UPLOAD_SYNC_INTERVAL_MS || '5000', 10), 2000);
 
 // 确保uploads目录存在
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
   console.log('📁 Created uploads directory');
+}
+
+let uploadSyncInProgress = false;
+let uploadSyncPending = false;
+const unmatchedUploadFolders = new Set();
+
+function guessMimeType(filename) {
+  const ext = path.extname(filename).toLowerCase();
+  const mimeMap = {
+    '.pdf': 'application/pdf',
+    '.md': 'text/markdown',
+    '.markdown': 'text/markdown',
+    '.txt': 'text/plain',
+    '.text': 'text/plain',
+    '.json': 'application/json',
+    '.csv': 'text/csv',
+    '.html': 'text/html',
+    '.htm': 'text/html',
+    '.js': 'application/javascript'
+  };
+
+  return mimeMap[ext] || 'application/octet-stream';
+}
+
+function normalizeRelativePath(filePath) {
+  return path.relative(__dirname, filePath).split(path.sep).join('/');
+}
+
+function isScheduleUploadFolderName(folderName) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(folderName) || /^schedule_\d+$/.test(folderName);
+}
+
+function resolveScheduleForFolder(schedules, folderName) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(folderName)) {
+    return schedules.find(schedule => schedule.date === folderName) || null;
+  }
+
+  const scheduleMatch = /^schedule_(\d+)$/.exec(folderName);
+  if (!scheduleMatch) {
+    return null;
+  }
+
+  return schedules.find(schedule => schedule.id === parseInt(scheduleMatch[1], 10)) || null;
+}
+
+function buildDbFileKey(scheduleId, file) {
+  const relativePath = file.relativePath
+    ? file.relativePath.split(path.sep).join('/')
+    : (file.path ? normalizeRelativePath(file.path) : '');
+  const fallbackName = file.name || file.filename || '';
+  return `${scheduleId}::${relativePath || fallbackName}`;
+}
+
+function createDiskFileRecord(schedule, filePath, fileStats) {
+  const filename = path.basename(filePath);
+  return {
+    scheduleId: schedule.id,
+    date: schedule.date || path.basename(path.dirname(filePath)),
+    week: schedule.week,
+    name: filename,
+    filename,
+    size: fileStats.size,
+    path: filePath,
+    relativePath: normalizeRelativePath(filePath),
+    uploadDate: new Date(fileStats.mtimeMs).toISOString(),
+    mimetype: guessMimeType(filename),
+    syncSourceMtimeMs: fileStats.mtimeMs
+  };
+}
+
+async function syncUploadsDirectoryOnce(trigger = 'interval') {
+  const db = router.db;
+  const schedules = db.get('schedule').value() || [];
+  const diskFilesBySchedule = new Map();
+  const activeUnmatchedFolders = new Set();
+
+  if (fs.existsSync(uploadsDir)) {
+    const folderNames = fs.readdirSync(uploadsDir);
+    for (const folderName of folderNames) {
+      const folderPath = path.join(uploadsDir, folderName);
+      if (!fs.statSync(folderPath).isDirectory()) {
+        continue;
+      }
+
+      if (!isScheduleUploadFolderName(folderName)) {
+        continue;
+      }
+
+      const schedule = resolveScheduleForFolder(schedules, folderName);
+      if (!schedule) {
+        activeUnmatchedFolders.add(folderName);
+        if (!unmatchedUploadFolders.has(folderName)) {
+          unmatchedUploadFolders.add(folderName);
+          console.warn(`[uploads-sync] 跳过未找到排班记录的目录: ${folderName}`);
+        }
+        continue;
+      }
+
+      const files = fs.readdirSync(folderPath);
+      const fileMap = diskFilesBySchedule.get(schedule.id) || new Map();
+
+      for (const filename of files) {
+        const filePath = path.join(folderPath, filename);
+        const fileStats = fs.statSync(filePath);
+        if (!fileStats.isFile()) {
+          continue;
+        }
+
+        const diskFile = createDiskFileRecord(schedule, filePath, fileStats);
+        fileMap.set(buildDbFileKey(schedule.id, diskFile), diskFile);
+      }
+
+      diskFilesBySchedule.set(schedule.id, fileMap);
+    }
+  }
+
+  for (const folderName of Array.from(unmatchedUploadFolders)) {
+    if (!activeUnmatchedFolders.has(folderName)) {
+      unmatchedUploadFolders.delete(folderName);
+    }
+  }
+
+  let addedCount = 0;
+  let updatedCount = 0;
+  let removedCount = 0;
+  let schedulesChanged = false;
+  const indexTasks = [];
+
+  for (const schedule of schedules) {
+    const currentFiles = Array.isArray(schedule.files) ? schedule.files : [];
+    const diskMap = new Map(diskFilesBySchedule.get(schedule.id) || []);
+    const nextFiles = [];
+    let scheduleChanged = false;
+
+    for (const currentFile of currentFiles) {
+      const fileKey = buildDbFileKey(schedule.id, currentFile);
+      const diskFile = diskMap.get(fileKey);
+
+      if (!diskFile) {
+        removedCount++;
+        scheduleChanged = true;
+        removeFromIndex(schedule.date || `schedule_${schedule.id}`, currentFile.name || currentFile.filename);
+        continue;
+      }
+
+      const syncedFile = {
+        ...currentFile,
+        name: currentFile.name || currentFile.filename || diskFile.name,
+        filename: diskFile.filename,
+        size: diskFile.size,
+        path: diskFile.path,
+        relativePath: diskFile.relativePath,
+        uploadDate: currentFile.uploadDate || diskFile.uploadDate,
+        mimetype: diskFile.mimetype,
+        syncSourceMtimeMs: diskFile.syncSourceMtimeMs
+      };
+
+      const metadataChanged =
+        currentFile.filename !== syncedFile.filename ||
+        currentFile.size !== syncedFile.size ||
+        currentFile.path !== syncedFile.path ||
+        currentFile.relativePath !== syncedFile.relativePath ||
+        currentFile.mimetype !== syncedFile.mimetype ||
+        currentFile.syncSourceMtimeMs !== syncedFile.syncSourceMtimeMs;
+
+      const contentChanged =
+        currentFile.size !== diskFile.size ||
+        currentFile.relativePath !== diskFile.relativePath ||
+        currentFile.path !== diskFile.path ||
+        (currentFile.syncSourceMtimeMs != null && currentFile.syncSourceMtimeMs !== diskFile.syncSourceMtimeMs);
+
+      if (metadataChanged) {
+        updatedCount++;
+        scheduleChanged = true;
+      }
+
+      if (contentChanged) {
+        indexTasks.push(
+          indexSingleFile(diskFile.path, {
+            date: schedule.date || `schedule_${schedule.id}`,
+            week: schedule.week,
+            scheduleId: schedule.id,
+            filename: diskFile.name,
+            mimetype: diskFile.mimetype
+          })
+        );
+      }
+
+      nextFiles.push(syncedFile);
+      diskMap.delete(fileKey);
+    }
+
+    for (const diskFile of diskMap.values()) {
+      addedCount++;
+      scheduleChanged = true;
+      nextFiles.push({
+        name: diskFile.name,
+        filename: diskFile.filename,
+        size: diskFile.size,
+        path: diskFile.path,
+        relativePath: diskFile.relativePath,
+        uploadDate: diskFile.uploadDate,
+        mimetype: diskFile.mimetype,
+        syncSourceMtimeMs: diskFile.syncSourceMtimeMs
+      });
+
+      indexTasks.push(
+        indexSingleFile(diskFile.path, {
+          date: schedule.date || `schedule_${schedule.id}`,
+          week: schedule.week,
+          scheduleId: schedule.id,
+          filename: diskFile.name,
+          mimetype: diskFile.mimetype
+        })
+      );
+    }
+
+    if (scheduleChanged) {
+      schedule.files = nextFiles;
+      schedule.updatedAt = new Date().toISOString();
+      schedulesChanged = true;
+    }
+  }
+
+  if (schedulesChanged) {
+    db.set('schedule', schedules).write();
+  }
+
+  const indexResults = await Promise.allSettled(indexTasks);
+  const indexedFiles = indexResults.reduce((count, result) => {
+    if (result.status !== 'fulfilled') {
+      return count;
+    }
+    return count + (result.value > 0 ? 1 : 0);
+  }, 0);
+
+  if (addedCount > 0 || updatedCount > 0 || removedCount > 0) {
+    console.log(
+      `[uploads-sync] ${trigger}: 新增 ${addedCount}，更新 ${updatedCount}，删除 ${removedCount}，触发索引 ${indexedFiles}`
+    );
+  }
+
+  return {
+    addedCount,
+    updatedCount,
+    removedCount,
+    indexedFiles
+  };
+}
+
+async function syncUploadsDirectory(trigger = 'interval') {
+  if (uploadSyncInProgress) {
+    uploadSyncPending = true;
+    return { skipped: true };
+  }
+
+  uploadSyncInProgress = true;
+  let lastResult = { addedCount: 0, updatedCount: 0, removedCount: 0, indexedFiles: 0 };
+  let nextTrigger = trigger;
+
+  try {
+    do {
+      uploadSyncPending = false;
+      lastResult = await syncUploadsDirectoryOnce(nextTrigger);
+      nextTrigger = 'pending';
+    } while (uploadSyncPending);
+  } catch (error) {
+    console.error('[uploads-sync] 同步失败:', error);
+  } finally {
+    uploadSyncInProgress = false;
+  }
+
+  return lastResult;
 }
 
 // 配置multer存储
@@ -74,6 +373,11 @@ server.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // 添加自定义路由（可选）
 server.use(jsonServer.bodyParser);
 
+// ==================== RAG 路由 ====================
+// 将 db 引用挂载到 app，供 ragRouter 使用
+server.set('ragDb', router.db);
+server.use('/api/rag', ragRouter);
+
 // ==================== 文件上传路由 ====================
 // POST /schedule/:id/files - 上传文件
 server.post('/schedule/:id/files', upload.array('files', 10), (req, res) => {
@@ -129,6 +433,23 @@ server.post('/schedule/:id/files', upload.array('files', 10), (req, res) => {
       files: schedule.files,
       uploaded: uploadedFiles.length
     });
+
+    // 异步增量索引新上传的文件（不阻塞响应）
+    const uploadDate = schedule.date || `schedule_${scheduleId}`;
+    for (const file of uploadedFiles) {
+      const meta = {
+        date: uploadDate,
+        week: schedule.week,
+        scheduleId: parseInt(scheduleId),
+        filename: file.name,
+        mimetype: file.mimetype
+      };
+      indexSingleFile(file.path, meta).then(chunks => {
+        if (chunks > 0) console.log(`[RAG] Indexed ${file.name}: ${chunks} chunks`);
+      }).catch(err => {
+        console.warn('[RAG] Incremental index failed for', file.name, ':', err.message);
+      });
+    }
   } catch (error) {
     console.error('Upload error:', error);
     res.status(500).json({ error: 'File upload failed', message: error.message });
@@ -221,6 +542,10 @@ server.delete('/schedule/:id/files/:fileIndex', (req, res) => {
       message: 'File deleted successfully',
       remainingFiles: schedule.files.length
     });
+
+    // 从 RAG 索引中移除已删除文件的条目
+    const deleteDate = schedule.date || `schedule_${scheduleId}`;
+    removeFromIndex(deleteDate, file.name);
   } catch (error) {
     console.error('Delete error:', error);
     res.status(500).json({ error: 'File deletion failed', message: error.message });
@@ -650,4 +975,15 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`📊 Statistics: http://localhost:${PORT}/statistics`);
   console.log(`📁 File uploads: http://localhost:${PORT}/schedule/:id/files`);
   console.log(`📂 Uploads directory: ${uploadsDir}`);
+  console.log(`🔄 Upload sync interval: ${UPLOAD_SYNC_INTERVAL_MS}ms`);
+
+  syncUploadsDirectory('startup').catch(error => {
+    console.error('[uploads-sync] 启动同步失败:', error);
+  });
+
+  setInterval(() => {
+    syncUploadsDirectory('interval').catch(error => {
+      console.error('[uploads-sync] 定时同步失败:', error);
+    });
+  }, UPLOAD_SYNC_INTERVAL_MS);
 });
