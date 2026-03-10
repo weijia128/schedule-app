@@ -1,3 +1,4 @@
+.DS_Store
 # 依赖
 node_modules/
 npm-debug.log*
@@ -13,6 +14,12 @@ logs/
 
 # 上传的文件
 uploads/
+
+# RAG 索引（运行时生成，避免误提交）
+server/kb-index.json
+server/kb-index.json.tmp
+server/rag-index.json
+server/bm25-index.json
 
 # 备份文件
 *.backup
@@ -31,3 +38,8 @@ Thumbs.db
 # 临时文件
 tmp/
 temp/
+
+.DS_Store
+.env
+*.json
+__pycache__/

@@ -34,4 +34,13 @@ echo "📍 网络访问: http://${LOCAL_IP}:3000"
 echo "📍 系统类型: ${OS_TYPE}"
 echo ""
 
+# 加载 .env 配置（如果存在）
+if [ -f ".env" ]; then
+    echo "⚙️  Loading .env configuration..."
+    set -a
+    # shellcheck disable=SC1091
+    source .env
+    set +a
+fi
+
 npm start
