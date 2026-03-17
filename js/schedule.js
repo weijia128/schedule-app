@@ -2,7 +2,10 @@ import { fetchSchedule, patchScheduleItem } from './api.js';
 import { initDocumentLibrary, openLibraryFilePreview, renderFilesCell } from './document-library.js';
 import { initMessageBoard } from './message-board.js';
 import { initRagChat } from './rag-chat.js';
-import { renderStats } from './stats.js';
+import { renderStats } from './stats.js?v=20260317';
+
+// 功能开关：改为 true 即可开启文档问答功能
+const RAG_ENABLED = false;
 
 let scheduleData = [
     {week: 1, date: '2025-11-28', T1: '李佳晟', T2_1: '解勇宝', T2_2: '班新博', T3: '', topic: '工具：磐石ScienceOne / Chain-of-Thought Prompting...', remark: '', location: '201', time: '9:30-11:30', T1_done: true, T2_1_done: true, T2_2_done: true, T3_done: false, isHoliday: false},
@@ -21,47 +24,47 @@ let scheduleData = [
     {week: 14, date: '2026-02-27', T1: '龚丽', T2_1: '李佳晟', T2_2: '班新博', T3: '解勇宝', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
     {week: 15, date: '2026-03-06', T1: '叶玮佳', T2_1: '班新博', T2_2: '李佳晟', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
     {week: 16, date: '2026-03-13', T1: '李佳晟', T2_1: '解勇宝', T2_2: '龚丽', T3: '叶玮佳', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 17, date: '2026-3-20', T1: '班新博', T2_1: '龚丽', T2_2: '解勇宝', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 18, date: '2026-3-27', T1: '解勇宝', T2_1: '叶玮佳', T2_2: '李佳晟', T3: '班新博', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 19, date: '2026-04-03', T1: '龚丽', T2_1: '李佳晟', T2_2: '叶玮佳', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 20, date: '2026-04-10', T1: '叶玮佳', T2_1: '班新博', T2_2: '解勇宝', T3: '龚丽', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 21, date: '2026-04-17', T1: '李佳晟', T2_1: '解勇宝', T2_2: '班新博', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 22, date: '2026-04-24', T1: '班新博', T2_1: '龚丽', T2_2: '叶玮佳', T3: '李佳晟', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 23, date: '2026-05-01', T1: '解勇宝', T2_1: '叶玮佳', T2_2: '龚丽', T3: '', topic: '', remark: '假期冲突（劳动节5月1-5日），时间视具体情况定', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 24, date: '2026-05-08', T1: '龚丽', T2_1: '李佳晟', T2_2: '班新博', T3: '解勇宝', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 25, date: '2026-05-15', T1: '叶玮佳', T2_1: '班新博', T2_2: '李佳晟', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 26, date: '2026-05-22', T1: '李佳晟', T2_1: '解勇宝', T2_2: '龚丽', T3: '叶玮佳', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 27, date: '2026-05-29', T1: '班新博', T2_1: '龚丽', T2_2: '解勇宝', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 28, date: '2026-06-05', T1: '解勇宝', T2_1: '叶玮佳', T2_2: '李佳晟', T3: '班新博', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 29, date: '2026-06-21', T1: '龚丽', T2_1: '李佳晟', T2_2: '叶玮佳', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 30, date: '2026-06-19', T1: '叶玮佳', T2_1: '班新博', T2_2: '解勇宝', T3: '龚丽', topic: '', remark: '假期冲突（端午节6月19-21日），时间视具体情况定', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 31, date: '2026-06-26', T1: '李佳晟', T2_1: '解勇宝', T2_2: '班新博', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 32, date: '2026-07-03', T1: '班新博', T2_1: '龚丽', T2_2: '叶玮佳', T3: '李佳晟', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 33, date: '2026-07-10', T1: '解勇宝', T2_1: '叶玮佳', T2_2: '龚丽', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 34, date: '2026-07-17', T1: '龚丽', T2_1: '李佳晟', T2_2: '班新博', T3: '解勇宝', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 35, date: '2026-07-24', T1: '叶玮佳', T2_1: '班新博', T2_2: '李佳晟', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 36, date: '2026-07-31', T1: '李佳晟', T2_1: '解勇宝', T2_2: '龚丽', T3: '叶玮佳', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 37, date: '2026-08-07', T1: '班新博', T2_1: '龚丽', T2_2: '解勇宝', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 38, date: '2026-08-14', T1: '解勇宝', T2_1: '叶玮佳', T2_2: '李佳晟', T3: '班新博', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 39, date: '2026-08-21', T1: '龚丽', T2_1: '李佳晟', T2_2: '叶玮佳', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 40, date: '2026-08-28', T1: '叶玮佳', T2_1: '班新博', T2_2: '解勇宝', T3: '龚丽', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 41, date: '2026-09-04', T1: '李佳晟', T2_1: '解勇宝', T2_2: '班新博', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 42, date: '2026-09-11', T1: '班新博', T2_1: '龚丽', T2_2: '叶玮佳', T3: '李佳晟', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 43, date: '2026-09-18', T1: '解勇宝', T2_1: '叶玮佳', T2_2: '龚丽', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 44, date: '2026-09-25', T1: '龚丽', T2_1: '李佳晟', T2_2: '班新博', T3: '解勇宝', topic: '', remark: '假期冲突（中秋节9月25-27日），时间视具体情况定', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 45, date: '2026-10-02', T1: '叶玮佳', T2_1: '班新博', T2_2: '李佳晟', T3: '', topic: '', remark: '假期冲突（国庆节10月1-7日），时间视具体情况定', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 46, date: '2026-10-09', T1: '李佳晟', T2_1: '解勇宝', T2_2: '龚丽', T3: '叶玮佳', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 47, date: '2026-10-16', T1: '班新博', T2_1: '龚丽', T2_2: '解勇宝', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 48, date: '2026-10-23', T1: '解勇宝', T2_1: '叶玮佳', T2_2: '李佳晟', T3: '班新博', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 49, date: '2026-10-30', T1: '龚丽', T2_1: '李佳晟', T2_2: '叶玮佳', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 50, date: '2026-11-06', T1: '叶玮佳', T2_1: '班新博', T2_2: '解勇宝', T3: '龚丽', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 51, date: '2026-11-13', T1: '李佳晟', T2_1: '解勇宝', T2_2: '班新博', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 52, date: '2026-11-20', T1: '班新博', T2_1: '龚丽', T2_2: '叶玮佳', T3: '李佳晟', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 53, date: '2026-11-27', T1: '解勇宝', T2_1: '叶玮佳', T2_2: '龚丽', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 54, date: '2026-12-04', T1: '龚丽', T2_1: '李佳晟', T2_2: '班新博', T3: '解勇宝', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 55, date: '2026-12-11', T1: '叶玮佳', T2_1: '班新博', T2_2: '李佳晟', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 56, date: '2026-12-18', T1: '李佳晟', T2_1: '解勇宝', T2_2: '龚丽', T3: '叶玮佳', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
-    {week: 57, date: '2026-12-25', T1: '班新博', T2_1: '龚丽', T2_2: '解勇宝', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false}
+    {week: 17, date: '2026-03-20', T1: '班新博', T2_1: '李佳晟', T2_2: '李燕玲', T3: '', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 18, date: '2026-03-27', T1: '解勇宝', T2_1: '龚丽', T2_2: '叶玮佳', T3: '李佳晟', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 19, date: '2026-04-03', T1: '龚丽', T2_1: '李佳晟', T2_2: '叶玮佳', T3: '', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 20, date: '2026-04-10', T1: '叶玮佳', T2_1: '解勇宝', T2_2: '李燕玲', T3: '班新博', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 21, date: '2026-04-17', T1: '李燕玲', T2_1: '龚丽', T2_2: '解勇宝', T3: '', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 22, date: '2026-04-24', T1: '李佳晟', T2_1: '班新博', T2_2: '叶玮佳', T3: '解勇宝', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 23, date: '2026-05-01', T1: '班新博', T2_1: '李佳晟', T2_2: '龚丽', T3: '', topic: '', remark: '假期冲突（劳动节5月1-5日），时间视具体情况定', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 24, date: '2026-05-08', T1: '解勇宝', T2_1: '叶玮佳', T2_2: '李燕玲', T3: '龚丽', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 25, date: '2026-05-15', T1: '龚丽', T2_1: '李燕玲', T2_2: '班新博', T3: '', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 26, date: '2026-05-22', T1: '叶玮佳', T2_1: '解勇宝', T2_2: '班新博', T3: '李燕玲', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 27, date: '2026-05-29', T1: '李燕玲', T2_1: '李佳晟', T2_2: '龚丽', T3: '', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 28, date: '2026-06-05', T1: '李佳晟', T2_1: '解勇宝', T2_2: '班新博', T3: '叶玮佳', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 29, date: '2026-06-12', T1: '班新博', T2_1: '李佳晟', T2_2: '李燕玲', T3: '', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 30, date: '2026-06-19', T1: '解勇宝', T2_1: '龚丽', T2_2: '叶玮佳', T3: '李佳晟', topic: '', remark: '假期冲突（端午节6月19-21日），时间视具体情况定', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 31, date: '2026-06-26', T1: '龚丽', T2_1: '李佳晟', T2_2: '叶玮佳', T3: '', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 32, date: '2026-07-03', T1: '叶玮佳', T2_1: '解勇宝', T2_2: '李燕玲', T3: '班新博', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 33, date: '2026-07-10', T1: '李燕玲', T2_1: '龚丽', T2_2: '解勇宝', T3: '', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 34, date: '2026-07-17', T1: '李佳晟', T2_1: '班新博', T2_2: '叶玮佳', T3: '解勇宝', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 35, date: '2026-07-24', T1: '班新博', T2_1: '李佳晟', T2_2: '龚丽', T3: '', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 36, date: '2026-07-31', T1: '解勇宝', T2_1: '叶玮佳', T2_2: '李燕玲', T3: '龚丽', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 37, date: '2026-08-07', T1: '龚丽', T2_1: '李燕玲', T2_2: '班新博', T3: '', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 38, date: '2026-08-14', T1: '叶玮佳', T2_1: '解勇宝', T2_2: '班新博', T3: '李燕玲', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 39, date: '2026-08-21', T1: '李燕玲', T2_1: '李佳晟', T2_2: '龚丽', T3: '', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 40, date: '2026-08-28', T1: '李佳晟', T2_1: '解勇宝', T2_2: '班新博', T3: '叶玮佳', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 41, date: '2026-09-04', T1: '班新博', T2_1: '李佳晟', T2_2: '李燕玲', T3: '', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 42, date: '2026-09-11', T1: '解勇宝', T2_1: '龚丽', T2_2: '叶玮佳', T3: '李佳晟', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 43, date: '2026-09-18', T1: '龚丽', T2_1: '李佳晟', T2_2: '叶玮佳', T3: '', topic: '', remark: '', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 44, date: '2026-09-25', T1: '叶玮佳', T2_1: '解勇宝', T2_2: '李燕玲', T3: '班新博', topic: '', remark: '假期冲突（中秋节9月25-27日），时间视具体情况定', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 45, date: '2026-10-02', T1: '李燕玲', T2_1: '龚丽', T2_2: '解勇宝', T3: '', topic: '', remark: '假期冲突（国庆节10月1-7日），时间视具体情况定', location: '201', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 46, date: '2026-10-09', T1: '李佳晟', T2_1: '班新博', T2_2: '叶玮佳', T3: '解勇宝', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 47, date: '2026-10-16', T1: '班新博', T2_1: '李佳晟', T2_2: '龚丽', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 48, date: '2026-10-23', T1: '解勇宝', T2_1: '叶玮佳', T2_2: '李燕玲', T3: '龚丽', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 49, date: '2026-10-30', T1: '龚丽', T2_1: '李燕玲', T2_2: '班新博', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 50, date: '2026-11-06', T1: '叶玮佳', T2_1: '解勇宝', T2_2: '班新博', T3: '李燕玲', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 51, date: '2026-11-13', T1: '李燕玲', T2_1: '李佳晟', T2_2: '龚丽', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 52, date: '2026-11-20', T1: '李佳晟', T2_1: '解勇宝', T2_2: '班新博', T3: '叶玮佳', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 53, date: '2026-11-27', T1: '班新博', T2_1: '李佳晟', T2_2: '李燕玲', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 54, date: '2026-12-04', T1: '解勇宝', T2_1: '龚丽', T2_2: '叶玮佳', T3: '李佳晟', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 55, date: '2026-12-11', T1: '龚丽', T2_1: '李佳晟', T2_2: '叶玮佳', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 56, date: '2026-12-18', T1: '叶玮佳', T2_1: '解勇宝', T2_2: '李燕玲', T3: '班新博', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false},
+    {week: 57, date: '2026-12-25', T1: '李燕玲', T2_1: '龚丽', T2_2: '解勇宝', T3: '', topic: '', remark: '', location: '603', time: '9:30-11:30', T1_done: false, T2_1_done: false, T2_2_done: false, T3_done: false, isHoliday: false}
 ];
 
 let refreshInterval = null;
@@ -564,7 +567,11 @@ async function initApp() {
         showError,
         showSuccess
     });
-    initRagChat({ openLibraryFilePreview });
+    if (RAG_ENABLED) {
+        initRagChat({ openLibraryFilePreview });
+    } else {
+        document.querySelector('.rag-chat-section').style.display = 'none';
+    }
 
     await autoCheckPastDates();
     renderSchedule();

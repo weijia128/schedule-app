@@ -51,6 +51,21 @@ db.json (lowdb) + server/uploads/{date}/ (filesystem)
 - `statistics`: Member completion rates
 - `messageBoard`: Team feedback and notices
 
+## Feature Flags
+
+功能开关位于 `js/schedule.js` 顶部（第 7 行左右）：
+
+```js
+// js/schedule.js
+const RAG_ENABLED = false;  // 改为 true 开启文档问答功能
+```
+
+| 开关 | 文件 | 说明 |
+|------|------|------|
+| `RAG_ENABLED` | `js/schedule.js` | 控制"文档问答"区域的显示与 RAG 初始化。`false` 时区域隐藏且后端不被调用；`true` 时恢复完整功能。 |
+
+> RAG 功能依赖后端 `server/rag/` 模块，开启前确保索引已构建（`🔄 重建索引`）。
+
 ## Important Notes
 
 - Frontend is a vanilla JS/CSS/HTML single-page app (~120KB) - no build step required

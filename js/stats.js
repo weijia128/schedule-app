@@ -1,4 +1,4 @@
-export const MEMBERS = ['班新博', '龚丽', '李佳晟', '解勇宝', '叶玮佳'];
+export const MEMBERS = ['班新博', '龚丽', '李佳晟', '解勇宝', '叶玮佳', '李燕玲'];
 
 export function calculateStats(scheduleData) {
     const stats = {};
