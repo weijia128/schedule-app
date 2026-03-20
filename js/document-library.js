@@ -88,14 +88,97 @@ function renderTextPreview(text) {
     `;
 }
 
+function normalizeMarkdownLine(line) {
+    return line.replace(/\u00a0/g, ' ');
+}
+
+function isMarkdownTableRow(line) {
+    const normalized = normalizeMarkdownLine(line).trim();
+    if (!normalized || !normalized.includes('|')) {
+        return false;
+    }
+
+    const content = normalized.replace(/^\|/, '').replace(/\|$/, '');
+    const cells = content.split('|').map(cell => cell.trim());
+    return cells.length >= 2 && cells.some(Boolean);
+}
+
+function isMarkdownTableDivider(line) {
+    const normalized = normalizeMarkdownLine(line).trim();
+    if (!normalized || !normalized.includes('|')) {
+        return false;
+    }
+
+    const content = normalized.replace(/^\|/, '').replace(/\|$/, '');
+    const cells = content.split('|').map(cell => cell.trim()).filter(Boolean);
+    return cells.length > 0 && cells.every(cell => /^:?-{3,}:?$/.test(cell));
+}
+
+function preprocessMarkdown(markdownText) {
+    const lines = markdownText.replace(/\r\n?/g, '\n').split('\n');
+    const processedLines = [];
+    let inFenceBlock = false;
+
+    for (let index = 0; index < lines.length; index++) {
+        const line = lines[index];
+        const trimmedLine = line.trim();
+
+        if (/^(```|~~~)/.test(trimmedLine)) {
+            inFenceBlock = !inFenceBlock;
+            processedLines.push(line);
+            continue;
+        }
+
+        if (inFenceBlock || !isMarkdownTableRow(line)) {
+            processedLines.push(line);
+            continue;
+        }
+
+        const blockLines = [];
+        let endIndex = index;
+
+        while (endIndex < lines.length) {
+            const currentLine = lines[endIndex];
+            if (!currentLine.trim() || isMarkdownTableRow(currentLine)) {
+                blockLines.push(currentLine);
+                endIndex++;
+                continue;
+            }
+            break;
+        }
+
+        const nonEmptyRows = blockLines.filter(blockLine => blockLine.trim());
+        const isLooseTableBlock =
+            nonEmptyRows.length >= 2 &&
+            isMarkdownTableDivider(nonEmptyRows[1]) &&
+            nonEmptyRows.slice(2).every(isMarkdownTableRow);
+
+        if (!isLooseTableBlock) {
+            processedLines.push(line);
+            continue;
+        }
+
+        processedLines.push(...nonEmptyRows.map(normalizeMarkdownLine));
+        index = endIndex - 1;
+    }
+
+    return processedLines.join('\n');
+}
+
 function renderMarkdownPreview(markdownText) {
     if (!window.marked || typeof window.marked.parse !== 'function' || !window.DOMPurify) {
         return renderTextPreview(markdownText);
     }
 
-    const rawHtml = window.marked.parse(markdownText, { gfm: true, breaks: true });
-    const safeHtml = window.DOMPurify.sanitize(rawHtml);
-    return `<div class="markdown-preview-inline">${safeHtml}</div>`;
+    try {
+        const cleanedMarkdown = preprocessMarkdown(markdownText);
+        const rawHtml = window.marked.parse(cleanedMarkdown, { gfm: true, breaks: true });
+        const safeHtml = window.DOMPurify.sanitize(rawHtml);
+        return `<div class="markdown-preview-inline">${safeHtml}</div>`;
+    } catch (error) {
+        console.error('Markdown 预览渲染失败，已回退为纯文本预览:', error);
+        return renderTextPreview(markdownText);
+    }
 }
 
 function setPreviewShell(file, extraInfo = '') {
