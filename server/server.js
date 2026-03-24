@@ -26,7 +26,8 @@ const cors = require('cors');
 const multer = require('multer');
 const express = require('express');
 const server = jsonServer.create();
-const router = jsonServer.router('db.json');
+const DB_PATH = path.join(__dirname, 'db.json');
+const router = jsonServer.router(DB_PATH);
 const middlewares = jsonServer.defaults();
 
 // RAG 模块
