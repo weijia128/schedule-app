@@ -1551,6 +1551,45 @@
         .rag-messages::-webkit-scrollbar-track { background: transparent; }
         .rag-messages::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 2px; }
 
+        .rag-iframe-container {
+            min-height: 720px;
+            border: 1.5px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: var(--bg-tertiary);
+        }
+
+        .rag-iframe {
+            display: block;
+            width: 100%;
+            min-height: 720px;
+            border: none;
+            background: white;
+        }
+
+        .rag-chat-section.rag-iframe-mode {
+            padding: 0;
+            background: var(--bg-elevated);
+        }
+
+        .rag-chat-section.rag-iframe-mode .rag-header,
+        .rag-chat-section.rag-iframe-mode .rag-filters,
+        .rag-chat-section.rag-iframe-mode .rag-messages,
+        .rag-chat-section.rag-iframe-mode .rag-input-area {
+            display: none !important;
+        }
+
+        .rag-chat-section.rag-iframe-mode .rag-iframe-container {
+            min-height: 760px;
+            border: none;
+            border-radius: inherit;
+            background: white;
+        }
+
+        .rag-chat-section.rag-iframe-mode .rag-iframe {
+            min-height: 760px;
+        }
+
         .rag-message {
             display: flex;
             gap: var(--space-sm);
@@ -2918,15 +2957,10 @@
                 </select>
             </label>
         </div>
-        <div class="rag-messages" id="ragMessages">
-            <div class="rag-welcome">
-                <div class="rag-welcome-icon">💬</div>
-                <p>向团队文档提问，AI 将从已上传的文件中检索相关内容并作答。<br>
-                   例如：<em>LangSmith 有哪些功能？</em>&nbsp;&nbsp;<em>MinerU 如何处理 PDF？</em></p>
-            </div>
-        </div>
+        <div class="rag-iframe-container" id="ragIframeContainer" hidden></div>
+        <div class="rag-messages" id="ragMessages"></div>
         <div class="rag-input-area">
-            <textarea class="rag-input" id="ragInput" placeholder="输入问题，按 Enter 发送（Shift+Enter 换行）..." rows="1"></textarea>
+            <textarea class="rag-input" id="ragInput" placeholder="例如：LangSmith 有哪些功能？MinerU 如何处理 PDF？" rows="1"></textarea>
             <button class="rag-clear-btn" id="ragClearBtn" title="清空对话">🗑</button>
             <button class="rag-send-btn" id="ragSendBtn">发送</button>
         </div>
@@ -2992,7 +3026,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
-<script type="module" src="./js/schedule.js"></script>
+<script type="module" src="./js/schedule.js?v=20260324-ragflow-iframe"></script>
 
     <!-- 文件预览区域 -->
     <div id="filePreviewSection" class="file-preview-section" style="display: none;">

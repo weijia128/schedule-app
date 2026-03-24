@@ -195,13 +195,7 @@ function ragHandleKey(event) {
 
 function ragClearHistory() {
     ragHistory = [];
-    document.getElementById('ragMessages').innerHTML = `
-        <div class="rag-welcome">
-            <div class="rag-welcome-icon">💬</div>
-            <p>向团队文档提问，AI 将从已上传的文件中检索相关内容并作答。<br>
-               例如：<em>LangSmith 有哪些功能？</em>&nbsp;&nbsp;<em>MinerU 如何处理 PDF？</em></p>
-        </div>
-    `;
+    document.getElementById('ragMessages').innerHTML = '';
 }
 
 function ragCollectFilters() {
@@ -252,8 +246,67 @@ function addRagListeners() {
     document.getElementById('ragInput').addEventListener('keydown', ragHandleKey);
 }
 
+export function mountRagIframe(iframeUrl) {
+    const section = document.querySelector('.rag-chat-section');
+    const container = document.getElementById('ragIframeContainer');
+    const badge = document.getElementById('ragStatusBadge');
+    const info = document.getElementById('ragIndexInfo');
+    const reindexButton = document.getElementById('ragReindexBtn');
+    const filters = document.getElementById('ragFilters');
+    const messages = document.getElementById('ragMessages');
+    const inputArea = document.querySelector('.rag-input-area');
+
+    if (!container) {
+        throw new Error('未找到 RAGFlow iframe 容器');
+    }
+
+    if (!iframeUrl) {
+        throw new Error('未配置 RAGFlow iframe 地址');
+    }
+
+    section?.classList.add('rag-iframe-mode');
+
+    if (badge) {
+        badge.textContent = 'RAGFlow';
+        badge.className = 'rag-status-badge ready';
+    }
+    if (info) {
+        info.textContent = '已嵌入 RAGFlow 对话';
+    }
+    if (reindexButton) {
+        reindexButton.hidden = true;
+    }
+    if (filters) {
+        filters.hidden = true;
+    }
+    if (messages) {
+        messages.hidden = true;
+    }
+    if (inputArea) {
+        inputArea.hidden = true;
+    }
+    container.hidden = false;
+
+    if (container.dataset.iframeUrl === iframeUrl) {
+        return;
+    }
+
+    container.dataset.iframeUrl = iframeUrl;
+    container.innerHTML = '';
+
+    const iframe = document.createElement('iframe');
+    iframe.className = 'rag-iframe';
+    iframe.src = iframeUrl;
+    iframe.title = 'RAGFlow 文档问答';
+    iframe.loading = 'lazy';
+    iframe.referrerPolicy = 'no-referrer';
+
+    container.appendChild(iframe);
+}
+
 export function initRagChat(options = {}) {
     openLibraryFilePreview = options.openLibraryFilePreview || openLibraryFilePreview;
+    document.querySelector('.rag-chat-section')?.classList.remove('rag-iframe-mode');
 
     window.ragReindex = ragReindex;
     window.ragSendQuery = ragSendQuery;

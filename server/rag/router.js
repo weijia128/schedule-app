@@ -17,6 +17,68 @@ const TOP_N = parseInt(process.env.RAG_TOP_N || '3', 10);
 const MIN_RERANK_SCORE_VALUE = Number.parseFloat(process.env.RAG_MIN_RERANK_SCORE || '0.08');
 const MIN_RERANK_SCORE = Number.isFinite(MIN_RERANK_SCORE_VALUE) ? MIN_RERANK_SCORE_VALUE : 0.08;
 
+function normalizeRagMode(mode) {
+  const normalized = typeof mode === 'string' ? mode.trim().toLowerCase() : '';
+
+  if (normalized === 'iframe' || normalized === 'local' || normalized === 'disabled') {
+    return normalized;
+  }
+
+  if (normalized === 'ragflow') {
+    return 'iframe';
+  }
+
+  return process.env.RAGFLOW_IFRAME_URL ? 'iframe' : 'disabled';
+}
+
+function isConfiguredIframeUrl(iframeUrl) {
+  if (!iframeUrl) {
+    return false;
+  }
+
+  if (iframeUrl.includes('...')) {
+    return false;
+  }
+
+  return iframeUrl.startsWith('http://') || iframeUrl.startsWith('https://');
+}
+
+function getRagUiConfig() {
+  const requestedMode = normalizeRagMode(process.env.RAG_MODE);
+  const iframeUrl = (process.env.RAGFLOW_IFRAME_URL || '').trim() || null;
+  const iframeConfigured = isConfiguredIframeUrl(iframeUrl);
+  const localConfig = getRagConfigStatus();
+  const provider = requestedMode === 'iframe' ? 'ragflow' : 'local';
+
+  if (requestedMode === 'iframe') {
+    return {
+      mode: iframeConfigured ? 'iframe' : 'disabled',
+      provider,
+      iframeUrl,
+      configured: iframeConfigured,
+      missingConfigMessage: iframeConfigured ? null : 'RAGFLOW_IFRAME_URL 未配置或仍为占位符'
+    };
+  }
+
+  if (requestedMode === 'local') {
+    return {
+      mode: 'local',
+      provider,
+      iframeUrl: null,
+      configured: localConfig.configured,
+      missingConfigMessage: localConfig.missingConfigMessage || null
+    };
+  }
+
+  return {
+    mode: 'disabled',
+    provider,
+    iframeUrl: null,
+    configured: false,
+    missingConfigMessage: null
+  };
+}
+
 function formatSourceMeta(metadata) {
   const weekLabel = metadata.week != null ? ` 第${metadata.week}周` : '';
   return `${metadata.filename}（${metadata.date}${weekLabel}）`;
@@ -37,16 +99,37 @@ function buildNoEvidenceResponse(extra = {}, hasFilters = false) {
   };
 }
 
+router.get('/config', (req, res) => {
+  try {
+    res.json({
+      success: true,
+      ...getRagUiConfig()
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // ── Health / status ───────────────────────────────────────────────────────────
 
 router.get('/status', (req, res) => {
   try {
     const status = getIndexStatus();
     const configStatus = getRagConfigStatus();
+    const uiConfig = getRagUiConfig();
+    const effectiveConfigStatus = uiConfig.mode === 'local'
+      ? configStatus
+      : {
+          configured: uiConfig.configured,
+          missingConfigMessage: uiConfig.missingConfigMessage
+        };
+
     res.json({
       success: true,
+      mode: uiConfig.mode,
+      provider: uiConfig.provider,
       ...status,
-      ...configStatus,
+      ...effectiveConfigStatus,
       llmModel: LLM_MODEL,
       embeddingModel: process.env.RAG_EMBEDDING_MODEL || 'bge-m3',
       rerankEnabled: Boolean(process.env.RAG_RERANK_BASE_URL)

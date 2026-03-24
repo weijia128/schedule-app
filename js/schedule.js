@@ -1,11 +1,8 @@
-import { fetchSchedule, patchScheduleItem } from './api.js';
+import { fetchRagConfig, fetchSchedule, patchScheduleItem } from './api.js';
 import { initDocumentLibrary, openLibraryFilePreview, renderFilesCell } from './document-library.js';
 import { initMessageBoard } from './message-board.js';
-import { initRagChat } from './rag-chat.js';
+import { initRagChat, mountRagIframe } from './rag-chat.js';
 import { renderStats } from './stats.js?v=20260317';
-
-// 功能开关：改为 true 即可开启文档问答功能
-const RAG_ENABLED = false;
 
 let scheduleData = [
     {week: 1, date: '2025-11-28', T1: '李佳晟', T2_1: '解勇宝', T2_2: '班新博', T3: '', topic: '工具：磐石ScienceOne / Chain-of-Thought Prompting...', remark: '', location: '201', time: '9:30-11:30', T1_done: true, T2_1_done: true, T2_2_done: true, T3_done: false, isHoliday: false},
@@ -567,11 +564,7 @@ async function initApp() {
         showError,
         showSuccess
     });
-    if (RAG_ENABLED) {
-        initRagChat({ openLibraryFilePreview });
-    } else {
-        document.querySelector('.rag-chat-section').style.display = 'none';
-    }
+    await initRagSection();
 
     await autoCheckPastDates();
     renderSchedule();
@@ -579,6 +572,37 @@ async function initApp() {
     if (success) {
         startAutoRefresh(10000);
         window.addEventListener('beforeunload', stopAutoRefresh);
+    }
+}
+
+async function initRagSection() {
+    const section = document.querySelector('.rag-chat-section');
+    if (!section) {
+        return;
+    }
+
+    section.classList.remove('rag-iframe-mode');
+
+    try {
+        const config = await fetchRagConfig();
+        const mode = typeof config.mode === 'string' ? config.mode.toLowerCase() : 'disabled';
+
+        if (mode === 'iframe') {
+            section.style.display = '';
+            mountRagIframe(config.iframeUrl);
+            return;
+        }
+
+        if (mode === 'local') {
+            section.style.display = '';
+            initRagChat({ openLibraryFilePreview });
+            return;
+        }
+
+        section.style.display = 'none';
+    } catch (error) {
+        console.warn('[RAG] 初始化失败:', error);
+        section.style.display = 'none';
     }
 }
 

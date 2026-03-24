@@ -97,8 +97,19 @@
       "T2_2_done": true,
       "T3_done": false,
       "isHoliday": false,
-      "files": [],
-      "updatedAt": "2026-01-19T08:50:59.697Z"
+      "files": [
+        {
+          "name": "为 AI Agent 编写高效工具 — 来自 Anthropic 的实践经验.md",
+          "filename": "为 AI Agent 编写高效工具 — 来自 Anthropic 的实践经验.md",
+          "size": 10132,
+          "path": "/Users/weijia/Library/Mobile Documents/com~apple~CloudDocs/code/ai/claude_demo/schedule-app/server/uploads/2025-12-26/为 AI Agent 编写高效工具 — 来自 Anthropic 的实践经验.md",
+          "relativePath": "uploads/2025-12-26/为 AI Agent 编写高效工具 — 来自 Anthropic 的实践经验.md",
+          "uploadDate": "2026-03-20T06:01:38.309Z",
+          "mimetype": "text/markdown",
+          "syncSourceMtimeMs": 1773986498308.6062
+        }
+      ],
+      "updatedAt": "2026-03-20T06:01:40.319Z"
     },
     {
       "id": 6,
@@ -393,12 +404,13 @@
       "remark": "",
       "location": "201",
       "time": "9:30-11:30",
-      "T1_done": false,
-      "T2_1_done": false,
-      "T2_2_done": false,
+      "T1_done": true,
+      "T2_1_done": true,
+      "T2_2_done": true,
       "T3_done": false,
       "isHoliday": false,
-      "files": []
+      "files": [],
+      "updatedAt": "2026-03-20T08:06:37.235Z"
     },
     {
       "id": 18,

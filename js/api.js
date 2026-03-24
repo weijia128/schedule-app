@@ -54,6 +54,10 @@ export async function fetchAllFiles() {
     return requestJson('/files/all');
 }
 
+export async function fetchRagConfig() {
+    return requestJson('/api/rag/config');
+}
+
 export async function deleteScheduleFile(scheduleId, fileIndex) {
     const response = await fetch(`${API_BASE_URL}/schedule/${scheduleId}/files/${fileIndex}`, {
         method: 'DELETE'
